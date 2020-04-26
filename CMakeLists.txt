@@ -3,4 +3,4 @@ project(MaskinnerMandatory2 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(MaskinnerMandatory2 main.c)
+add_executable(MaskinnerMandatory2 main.c helpFunctions.h instructions.h)
