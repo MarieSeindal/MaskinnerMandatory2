@@ -7,22 +7,26 @@ void evalADD_AND();
 void evalNOT();
 void evalLDR();
 void evalInstruction();
+
 const char * deleteSpaces();
 void remove_spaces ();
 void strToUpper ();
 void evalRegister ();
 char *decimal_to_binary();
-const char * evalAND(char * instruction);
+
 
 
 int main() {
+
+    //Some tests instructions
     //char line[] = "add R1, R2, #-5";
     //char line[] = "NOT R2, R0";
     char line[] = "LDR R2, R0, #17";
     //char line[] = "add R1, R2, R3";
 
+
     //To get the output of evalInstruction(), we must pass the pointer of the output to the function
-    //The function can then put store it's output at the address, pOutput points to, which can still be acessed in main
+    //The function can then store it's output at the address, pOutput points to, which can still be acessed in main
     char * output;
     char ** pOutput = &output;
     evalInstruction(line,pOutput);
