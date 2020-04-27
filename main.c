@@ -222,12 +222,15 @@ char *decimal_to_binary(int n, int numOfBits)
     char *pointer;
 
     count = 0;
-    pointer = (char*)malloc(numOfBits+1);
+    pointer = (char*)malloc(numOfBits+1); //den laver en pointer til char array
+                                                //som er af variabel længde dvs antallet
+                                                //af bits + 1 (den ene er til et 0)
 
     if (pointer == NULL)
         exit(EXIT_FAILURE);
 
-    for (c = numOfBits-1 ; c >= 0 ; c--)
+    for (c = numOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
+                                                //antallet af bits er større end 0
     {
         d = n >> c;
 
