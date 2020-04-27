@@ -25,7 +25,7 @@ void StrToUpper(char * lowerCase, char * upperCase){
     }
  }
 
-
+//DecimalToBinary(intn , int noOfBits)
 
 
 
