@@ -232,8 +232,8 @@ char *decimal_to_binary(int n, int numOfBits)
     for (c = numOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
                                                 //antallet af bits er større end 0
     {
-        d = n >> c;
-
+        d = n >> c;                             //bitwise right shift operator
+                                                //is equal to dividing n with 2^c
         if (d & 1)
             *(pointer+count) = 1 + '0';
         else
