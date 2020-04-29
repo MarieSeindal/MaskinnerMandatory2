@@ -1,10 +1,11 @@
 #include <stdio.h>
-#include "helpFunctions.h"
+//#include "helpFunctions.h"
 #include "instructions.h"
 
 
 
 void evalTest();
+void EvalInstruction(char * assembly, char * binary);
 
 int main() {
    char binary[16+5] = {0};
@@ -30,7 +31,7 @@ int main() {
     char bits[13]={0}; // output char array
     int testToDecimal = -13; //test value MAX 4095
 
-    decimalToBinary2(testToDecimal, 6, bits);
+    DecimalToBinary2(testToDecimal, 6, bits);
     DecimalToBinary(testToDecimal, 6, bits);
 
 
@@ -47,6 +48,34 @@ void evalTest(char * input, char * output){
     }
     //output[11]='\0';
 }
+
+void EvalInstruction(char * assembly, char * binary){
+    char withoutSpace[30] = {0};
+    // RemoveSpaces(assembly, withoutSpace);
+    char Instruction[30] = {0};
+    StrToUpper(withoutSpace, Instruction);
+
+    if(strstr(Instruction, "ADD") != NULL) //chekker om instruktionen indeholder ADD
+    {
+        evalADD(Instruction, binary);
+
+    }else if(strstr(Instruction, "NOT") != NULL){
+
+    }else if(strstr(Instruction, "LDR") != NULL){
+
+    }else if(strstr(Instruction, "LD") != NULL){
+
+    }else if(strstr(Instruction, "ST") != NULL){
+
+    }else if(strstr(Instruction, "BR") != NULL){
+
+    }else{//error
+    }
+
+
+
+}
+
 
 
 

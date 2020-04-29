@@ -6,7 +6,7 @@
 #define MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 #include <string.h>
-#include "instructions.h"
+//#include "instructions.h"
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 
@@ -31,7 +31,7 @@ void StrToUpper(char * lowerCase, char * upperCase){
     }
  }
 
-void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
+void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
 
     int numToBeDivided = n;
     char bit[13]={0};
@@ -76,13 +76,13 @@ void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
 
 
 
-void decimalToBinary2(int n, int numOfBits, char *bits)
+void DecimalToBinary(int n, int noOfBits, char *bits)
 {
     int c, d, count;                            //init tre ints
 
     count = 0;
 
-    for (c = numOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
+    for (c = noOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
                                 //antallet af bits er større end 0
         //og starter fra
     {
@@ -100,41 +100,19 @@ void decimalToBinary2(int n, int numOfBits, char *bits)
 
 }
 
-void ConvRegToBin(char * Register, char * BinReg){}
+void ConvRegToBin(char * Register, char * BinReg){
     //remove R
     //DecimalToBinary()
 
 
-
-
-
-
-void EvalInstruction(char * assembly, char * binary){
-    char withoutSpace[30] = {0};
-   // RemoveSpaces(assembly, withoutSpace);
-    char Instruction[30] = {0};
-    StrToUpper(withoutSpace, Instruction);
-
-    if(strstr(Instruction, "ADD") != NULL) //chekker om instruktionen indeholder ADD
-    {
-        evalADD(Instruction, binary);
-
-    }else if(strstr(Instruction, "NOT") != NULL){
-
-    }else if(strstr(Instruction, "LDR") != NULL){
-
-    }else if(strstr(Instruction, "LD") != NULL){
-
-    }else if(strstr(Instruction, "ST") != NULL){
-
-    }else if(strstr(Instruction, "BR") != NULL){
-
-    }else{//error
-         }
-
-
-
 }
+
+
+
+
+
+
+
 
 
 

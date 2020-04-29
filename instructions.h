@@ -60,7 +60,5 @@ void evalNOT(char * Instruction, char * binary)
 {
 
 
-
-
 }
 
