@@ -28,7 +28,7 @@ void StrToUpper(char * lowerCase, char * upperCase){
 void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
 
     int numToBeDivided = n;
-    int count = 0;
+    int count = noOfBits-1;
 
 
     while (numToBeDivided >= 1) {
@@ -42,7 +42,7 @@ void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
             bits[count]=49;
         }
 
-        count++;
+        count--;
         numToBeDivided = quotient;
     }
 
