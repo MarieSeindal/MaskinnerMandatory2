@@ -1,5 +1,4 @@
 #include <stdio.h>
-//#include "helpFunctions.h"
 #include "instructions.h"
 
 
@@ -9,9 +8,9 @@ void EvalInstruction(char * assembly, char * binary);
 
 int main() {
    char binary[16+5] = {0};
-   char TestAssembly[] = "ADDR1,R2,R2";
-   evalADD(TestAssembly,binary);
-   printf("Hehehhehe + %s", binary);
+   char TestAssembly[] = "NOTR1,R1,#-10";
+   evalNOT(TestAssembly,binary);
+   printf("\n%s\n", binary);
    EvalInstruction(TestAssembly, binary);
 
 
@@ -41,13 +40,6 @@ int main() {
     return 0;
 }
 
-
-void evalTest(char * input, char * output){
-    for (int i =0; i<11;i++){
-        output[i] = input[i] - 32;
-    }
-    //output[11]='\0';
-}
 
 void EvalInstruction(char * assembly, char * binary){
     char withoutSpace[30] = {0};

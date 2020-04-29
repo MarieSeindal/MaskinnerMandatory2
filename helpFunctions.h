@@ -101,8 +101,10 @@ void DecimalToBinary(int n, int noOfBits, char *bits)
 }
 
 void ConvRegToBin(char * Register, char * BinReg){
-    //remove R
-    //DecimalToBinary()
+    Register++; //Deletes the R from Register, so it's just a number
+    int RegisterInt = (int) Register[0] -48;
+
+    DecimalToBinary(RegisterInt,3,BinReg); //Always 3 bits in a register
 
 
 }
