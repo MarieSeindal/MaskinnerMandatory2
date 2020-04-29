@@ -16,6 +16,47 @@
 //void RemoveSpaces(char* withSpaces, char * withoutSpaces){}
 
 
+void signExtendBinary(char * binIn, int noOfBits, char *binOut)
+//input: char * binIn - a binary number
+//       int noOfBits - how many bits the output should be sign-extended to
+//Output: char * binOut - a correctly sign-exteded version of the input binary string
+//NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
+//      Also "works" with reverse "extension" e.g. removing some bits
+
+{
+    //Calculate size of hex-array in unorthodox way, since sizeof() doesn't work on dynamically allocated array
+    int inputLength =0;
+    while (binIn[inputLength] != NULL){
+        inputLength++;
+    }
+
+    if (noOfBits<inputLength){ //If it needs to be shortened
+        //Copy only the last "noOfBits" bits to binOut
+        int offset = inputLength-noOfBits;
+        for (int i = 0; i <noOfBits ; ++i) {
+            binOut[i] = binIn[i+offset];
+        }
+
+    } else if (noOfBits==inputLength){ //If size is already correct
+        //copy input into output
+        for (int i = 0; i <noOfBits ; ++i) {
+            binOut[i] = binIn[i];
+        }
+
+    } else { //If it needs to be extended
+        char extension = binIn[0]; //First bit of input determines if extension is with 1 or 0
+
+        //Output is extended to correct length
+        int offset = noOfBits-inputLength;
+        for (int i = 0; i < offset; ++i) { //All bits untill the offset are set to the extension
+            binOut[i] = extension;
+        }
+        //After the extension, input is appended to output
+        strcat(binOut,binIn);
+    }
+
+
+}
 
 
 
@@ -115,85 +156,84 @@ void hexToBin(char * hex, int noOfBits, char *binary)
 //Output: char * binary - a bit string in 2's complment format describing the same number as the input
 //NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
 {
-    //Calculate how many "extension bits" are needed
-    int inputHexLength = sizeof(hex)/ sizeof(hex[0]); //number of elements = size of array / size of element
-    int minOutputLength = inputHexLength *4;
-    int extensionBits = noOfBits - minOutputLength;
 
-
-    if (hex[0] < 8){ //If it is a positive number (e.g. if first hex-char is 0101)
-        for (int i =0; i<extensionBits;i++){
-            binary[i]='0';
-        }
-    } else{ //If it is a negative  number
-        for (int i =0; i<extensionBits;i++){
-            binary[i]='1';
-        }
+    //Calculates length of input (in wierd way, since sizeOf() doesn't work for dynamically allocated arrays)
+    int inputHexLength =0;
+    while (hex[inputHexLength] != NULL){
+        inputHexLength++;
     }
 
+    //Allocate space for sub-result (correct number but not correct length)
+    char tempOutput[inputHexLength*4];
+    tempOutput[0]='\0';
 
-    for (int i =extensionBits; i<noOfBits;i++){
+    //Go thorugh input and append corresponding binary values to tempOutPut
+    int i =0;
+    while (hex[i]!= '\0'){
 
         switch(hex[i])
         {
             case '0':
-                strcat(binary, "0000");
+                strcat(tempOutput, "0000");
                 break;
             case '1':
-                strcat(binary, "0001");
+                strcat(tempOutput, "0001");
                 break;
             case '2':
-                strcat(binary, "0010");
+                strcat(tempOutput, "0010");
                 break;
             case '3':
-                strcat(binary, "0011");
+                strcat(tempOutput, "0011");
                 break;
             case '4':
-                strcat(binary, "0100");
+                strcat(tempOutput, "0100");
                 break;
             case '5':
-                strcat(binary, "0101");
+                strcat(tempOutput, "0101");
                 break;
             case '6':
-                strcat(binary, "0110");
+                strcat(tempOutput, "0110");
                 break;
             case '7':
-                strcat(binary, "0111");
+                strcat(tempOutput, "0111");
                 break;
             case '8':
-                strcat(binary, "1000");
+                strcat(tempOutput, "1000");
                 break;
             case '9':
-                strcat(binary, "1001");
+                strcat(tempOutput, "1001");
                 break;
             case 'A':
-                strcat(binary, "1010");
+                strcat(tempOutput, "1010");
                 break;
             case 'B':
-                strcat(binary, "1011");
+                strcat(tempOutput, "1011");
                 break;
             case 'C':
-                strcat(binary, "1100");
+                strcat(tempOutput, "1100");
                 break;
             case 'D':
-                strcat(binary, "1101");
+                strcat(tempOutput, "1101");
                 break;
             case 'E':
-                strcat(binary, "1110");
+                strcat(tempOutput, "1110");
                 break;
             case 'F':
-                strcat(binary, "1111");
+                strcat(tempOutput, "1111");
                 break;
             default: //Activates only if no other case activated
                 printf("Input not hexadecimal.");
         }
+        i++;
     }
 
-
+    //Call signExtend function to format the number correctly
+    signExtendBinary(tempOutput,noOfBits,binary);
 
 
 
 }
+
 
 
 

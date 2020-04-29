@@ -9,8 +9,8 @@ void EvalInstruction(char * assembly, char * binary);
 int main() {
 
     char hexBin[10] = {0};
-    char hexTest[] = "1a";
-    hexToBin(hexTest,10,hexBin);
+    char hexTest[] = "DEADBEEF";
+    hexToBin(hexTest,32,hexBin);
     printf("%s\n",hexBin);
 
 
