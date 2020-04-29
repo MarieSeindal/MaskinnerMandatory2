@@ -7,13 +7,20 @@
 void evalTest();
 
 int main() {
-    //printf("Hello, World!\n");
+   char binary[16+5] = {0};
+   char TestAssembly[] = "ADDR1,R2,R2";
+   evalADD(TestAssembly,binary);
+   printf("Hehehhehe + %s", binary);
+   EvalInstruction(TestAssembly, binary);
 
-    //char output[100] = {0};
-    //char eksempel[] = "hejmaltehej";
-    //evalTest(eksempel, output);
+
+
+
+
+
     char UpperCase[20] = {0}; // et char array som er initialiseret til at være 0'er
     char testLowerCase[] = "mmDaRiaedhaEjd";
+
 
     StrToUpper(testLowerCase, UpperCase);
 

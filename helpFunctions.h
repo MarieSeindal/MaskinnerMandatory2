@@ -6,8 +6,14 @@
 #define MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 #include <string.h>
+#include "instructions.h"
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
+
+
+
+
+//void RemoveSpaces(char* withSpaces, char * withoutSpaces){}
 
 
 
@@ -77,7 +83,7 @@ void decimalToBinary2(int n, int numOfBits, char *bits)
     count = 0;
 
     for (c = numOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
-        //antallet af bits er større end 0
+                                //antallet af bits er større end 0
         //og starter fra
     {
         d = n >> c;                             //bitwise right shift operator
@@ -94,8 +100,41 @@ void decimalToBinary2(int n, int numOfBits, char *bits)
 
 }
 
+void ConvRegToBin(char * Register, char * BinReg){}
+    //remove R
+    //DecimalToBinary()
 
 
+
+
+
+
+void EvalInstruction(char * assembly, char * binary){
+    char withoutSpace[30] = {0};
+   // RemoveSpaces(assembly, withoutSpace);
+    char Instruction[30] = {0};
+    StrToUpper(withoutSpace, Instruction);
+
+    if(strstr(Instruction, "ADD") != NULL) //chekker om instruktionen indeholder ADD
+    {
+        evalADD(Instruction, binary);
+
+    }else if(strstr(Instruction, "NOT") != NULL){
+
+    }else if(strstr(Instruction, "LDR") != NULL){
+
+    }else if(strstr(Instruction, "LD") != NULL){
+
+    }else if(strstr(Instruction, "ST") != NULL){
+
+    }else if(strstr(Instruction, "BR") != NULL){
+
+    }else{//error
+         }
+
+
+
+}
 
 
 
