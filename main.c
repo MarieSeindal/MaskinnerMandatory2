@@ -8,10 +8,11 @@ void EvalInstruction(char * assembly, char * binary);
 
 int main() {
    char binary[16+5] = {0};
-   char TestAssembly[] = "NOTR1,R1,#-10";
-   evalNOT(TestAssembly,binary);
+   char notTest[] = "NOTR1,R1,R2";
+   char addTest[] = "NOTR1,R1,#-10";
+   evalNOT(notTest,binary);
    printf("\n%s\n", binary);
-   EvalInstruction(TestAssembly, binary);
+   EvalInstruction(notTest, binary);
 
 
 
