@@ -218,8 +218,8 @@ void evalRegister (const char* regASM, const char* regBIN)
 
 char *decimal_to_binary(int n, int numOfBits)
 {
-    int c, d, count;
-    char *pointer;
+    int c, d, count;                            //init tre ints
+    char *pointer;                              //pointer til en character array
 
     count = 0;
     pointer = (char*)malloc(numOfBits+1); //den laver en pointer til char array
@@ -231,17 +231,19 @@ char *decimal_to_binary(int n, int numOfBits)
 
     for (c = numOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
                                                 //antallet af bits er større end 0
+                                                //og starter fra
     {
         d = n >> c;                             //bitwise right shift operator
-                                                //is equal to dividing n with 2^c
-        if (d & 1)
+                                                //is equal to n/(2^c)
+        if (d & 1)                              //mask operation, bitwise and operator
+                                                //it becomes true when the last bit is 1
             *(pointer+count) = 1 + '0';
         else
             *(pointer+count) = 0 + '0';
 
-        count++;
+        count++;                                //counter
     }
-    *(pointer+count) = '\0';
+    *(pointer+count) = '\0';                       //
 
     return  pointer;
 }
