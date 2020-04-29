@@ -62,8 +62,9 @@ void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
         count2++;
     }
 
-
-
+    if (n == 0){
+        bits[0]=48;
+    }
 
 }
 
