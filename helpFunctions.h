@@ -28,7 +28,7 @@ void StrToUpper(char * lowerCase, char * upperCase){
 void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
 
     int numToBeDivided = n;
-    //char bit[13]={0};
+    char bit[13]={0};
     int count = 0;
 
 
@@ -38,16 +38,31 @@ void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
         int remainder = numToBeDivided % 2; //bit-værdien
 
         if (remainder == 0){
-            bits[count]=48;
+            bit[count]=48;
         } else{
-            bits[count]=49;
+            bit[count]=49;
         }
 
         count++;
 
         numToBeDivided = quotient;
-
     }
+
+    //char flip[count+1];
+
+    int forCounter = count;
+    int count2=0;
+
+    // 13 .... antl bit =4
+
+    for (forCounter; forCounter >= 0; forCounter-- ){
+
+        bits[forCounter-1]=bit[count2];
+
+        count2++;
+    }
+
+
 
 
 }

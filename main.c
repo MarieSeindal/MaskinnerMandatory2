@@ -21,9 +21,10 @@ int main() {
     //printf("%s",output);
 
     char bits[13]={0}; // output char array
-    int testToDecimal = 13; //test value
+    int testToDecimal = 174; //test value MAX 4095
 
     DecimalToBinary(testToDecimal, 13, bits);
+
 
     printf("%s", bits);
 
