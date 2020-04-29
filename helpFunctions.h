@@ -25,7 +25,32 @@ void StrToUpper(char * lowerCase, char * upperCase){
     }
  }
 
-//DecimalToBinary(intn , int noOfBits)
+void DecimalToBinary(int n , int noOfBits, char*bits){ // n= decimal
+
+    int numToBeDivided = n;
+    //char bit[13]={0};
+    int count = 0;
+
+
+    while (numToBeDivided >= 1) {
+
+        int quotient = numToBeDivided / 2; // resultatet af divisionen
+        int remainder = numToBeDivided % 2; //bit-værdien
+
+        if (remainder == 0){
+            bits[count]=48;
+        } else{
+            bits[count]=49;
+        }
+
+        count++;
+
+        numToBeDivided = quotient;
+
+    }
+
+
+}
 
 
 

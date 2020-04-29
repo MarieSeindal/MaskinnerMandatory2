@@ -17,8 +17,17 @@ int main() {
 
     StrToUpper(testLowerCase, UpperCase);
 
-    printf("%s",UpperCase);
+    printf("%s \n",UpperCase);
     //printf("%s",output);
+
+    char bits[13]={0}; // output char array
+    int testToDecimal = 13; //test value
+
+    DecimalToBinary(testToDecimal, 13, bits);
+
+    printf("%s", bits);
+
+
     return 0;
 }
 
