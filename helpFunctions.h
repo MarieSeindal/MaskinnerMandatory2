@@ -125,13 +125,13 @@ void DecimalToBinary(int n, int noOfBits, char *bits)
     count = 0;
 
     for (c = noOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
-                                //antallet af bits er større end 0
-        //og starter fra
+                                                //antallet af bits er større end 0
+                                                 //og starter fra
     {
         d = n >> c;                             //bitwise right shift operator
-        //is equal to n/(2^c)
+                                                 //is equal to n/(2^c)
         if (d & 1)                              //mask operation, bitwise and operator
-            //it becomes true when the last bit is 1
+                                                //it becomes true when the last bit is 1
             *(bits+count) = 1 + '0';
         else
             *(bits+count) = 0 + '0';
