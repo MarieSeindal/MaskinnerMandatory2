@@ -10,18 +10,15 @@
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 
-
-
-
 //void RemoveSpaces(char* withSpaces, char * withoutSpaces){}
 
 
 void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 //input: char * binIn - a binary number
-//       int noOfBits - how many bits the output should be sign-extended to
+//int noOfBits - how many bits the output should be sign-extended to
 //Output: char * binOut - a correctly sign-exteded version of the input binary string
 //NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
-//      Also "works" with reverse "extension" e.g. removing some bits
+//Also "works" with reverse "extension" e.g. removing some bits
 
 {
     //Calculate size of hex-array in unorthodox way, since sizeof() doesn't work on dynamically allocated array
@@ -60,8 +57,6 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 }
 
 
-
-
 void StrToUpper(char * lowerCase, char * upperCase){
     int j = strlen(lowerCase);
 
@@ -79,12 +74,22 @@ void StrToUpper(char * lowerCase, char * upperCase){
  }
 
 
-void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
+void DecimalToBinary2(int n, char*bits){ // n= decimal
 
     int numToBeDivided = n;
+    int WasItNegative = 0;
+
+    if(n<0){
+        numToBeDivided *= -1;
+        WasItNegative = 1;
+    }
     char bit[13]={0};
     int count = 0;
 
+    //takes care of the situation if only input is a 0
+    if (n == 0){
+        bits[0]=48;
+    }
 
     while (numToBeDivided >= 1) {
 
@@ -102,8 +107,6 @@ void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
         numToBeDivided = quotient;
     }
 
-    //char flip[count+1];
-
     int forCounter = count;
     int count2=0;
 
@@ -116,8 +119,14 @@ void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
         count2++;
     }
 
-    if (n == 0){
-        bits[0]=48;
+
+
+    if(WasItNegative){
+        //flip all the bits and add one
+        for(forCounter; forCounter>=0; forCounter--){
+            bits[forCounter] = ~bits[forCounter];
+        }
+
     }
 
 }

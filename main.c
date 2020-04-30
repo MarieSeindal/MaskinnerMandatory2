@@ -7,63 +7,23 @@ void evalTest();
 void EvalInstruction(char * assembly, char * binary);
 
 int main() {
-/*
-    //gamle TESTS
-    char immBin[50] = {0};
-    char immtest[] = "x5F";
-    imm_offsetToBin(immtest,10,immBin);
-    printf("%s\n",immBin);
-/*
-    char hexBin[32] = {0};
-    char hexTest[] = "3FFF1";
-    hexToBin(hexTest,32,hexBin);
-    printf("\n%s\n",hexBin);
-
-
-    char LDRBin[16+5] = {0};
-    char LDRtest[] = "LDRR1,R2,#-10";
-    evalLDR(LDRtest,LDRBin);
-    printf("\n%s\n", LDRBin);
-
-
-   char binary[16+5] = {0};
-   char notTest[] = "NOTR1,R1";
-   char addTest[] = "ADDR1,R2,#-10";
-   evalADD(addTest,binary);
-   printf("\n%s\n", binary);
-   EvalInstruction(notTest, binary);
-
-
-
-    char bits[13]={0}; // output char array
-    int testToDecimal = -13; //test value MAX 4095
-
-    DecimalToBinary2(testToDecimal, 6, bits);
-    DecimalToBinary(testToDecimal, 6, bits);
-    printf("%s", bits);
-
-
-
-    char UpperCase[20] = {0}; // et char array som er initialiseret til at være 0'er
-    char testLowerCase[] = "m#m.D-a&R";
-    StrToUpper(testLowerCase, UpperCase);
-    printf(testLowerCase);
-    printf("%s \n",UpperCase);
-    //printf("%s",output);
 
 /*
-    char STbin[16+5] = {0};
-    char STtest[] = "STR7,#8";
-    evalST(STtest,STbin);
-    printf("Test af evalST: %s\n",STbin);
-*/
-
 char bits[50] = {0};
-DecimalToBinary2(99,20,bits);
+DecimalToBinary2(-2,bits);
 printf("test af decToBin2: %s\n",bits);
+*/
+char TestBits[10] = {"11011"};
+char TestNegativeBits[10] = {0};
+int CharToInt = atoi(TestBits);
+int negated = ~CharToInt;
 
+    //
+    printf("%s\n",TestBits);
+    printf("%c\n",CharToInt);
+    printf("%c",negated);
 
-    return 0;
+return 0;
 }
 
 
@@ -89,8 +49,6 @@ void EvalInstruction(char * assembly, char * binary){
 
     }else{//error
     }
-
-
 
 }
 
