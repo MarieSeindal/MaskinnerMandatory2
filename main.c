@@ -27,9 +27,9 @@ int main() {
 
 
    char binary[16+5] = {0};
-   char notTest[] = "NOTR1,R1,R2";
-   char addTest[] = "NOTR1,R1,#-10";
-   evalNOT(notTest,binary);
+   char notTest[] = "NOTR1,R1";
+   char addTest[] = "ADDR1,R2,#-10";
+   evalADD(addTest,binary);
    printf("\n%s\n", binary);
    EvalInstruction(notTest, binary);
 
