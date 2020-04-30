@@ -48,7 +48,7 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 
         //Output is extended to correct length
         int offset = noOfBits-inputLength;
-        for (int i = 0; i < offset; ++i) { //All bits untill the offset are set to the extension
+        for (int i = 0; i < offset; i++) { //All bits untill the offset are set to the extension
             binOut[i] = extension;
         }
         //After the extension, input is appended to output
