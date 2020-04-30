@@ -33,11 +33,7 @@ int main() {
    printf("\n%s\n", binary);
    EvalInstruction(notTest, binary);
 
-    char UpperCase[20] = {0}; // et char array som er initialiseret til at være 0'er
-    char testLowerCase[] = "mmDaRiaedhaEjd";
-    StrToUpper(testLowerCase, UpperCase);
-    printf("%s \n",UpperCase);
-    //printf("%s",output);
+
 
     char bits[13]={0}; // output char array
     int testToDecimal = -13; //test value MAX 4095
@@ -48,12 +44,19 @@ int main() {
 
 
 */
+    char UpperCase[20] = {0}; // et char array som er initialiseret til at være 0'er
+    char testLowerCase[] = "m#m.D-a&R";
+    StrToUpper(testLowerCase, UpperCase);
+    printf(testLowerCase);
+    printf("%s \n",UpperCase);
+    //printf("%s",output);
 
+/*
     char STbin[16+5] = {0};
     char STtest[] = "STR7,#8";
     evalST(STtest,STbin);
     printf("Test af evalST: %s\n",STbin);
-
+*/
 
 
 

@@ -61,17 +61,40 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 
 
 
+//void StrToUpper(char * lowerCase, char * upperCase){
+//    int j = strlen(lowerCase);
+//
+//    for (int i =0; i<j;i++){
+//        if(lowerCase[i] < 91 && lowerCase[i] > 64){ //hvis de allerede er uppercase
+//            upperCase[i] = lowerCase[i];
+//        } else if(lowerCase[i] < 123 && lowerCase[i] > 96) { // hvis de er lowercase
+//            upperCase[i] = lowerCase[i] - 32;
+//        }
+//    }
+// }
+
+
+
 void StrToUpper(char * lowerCase, char * upperCase){
     int j = strlen(lowerCase);
 
+    // int i = uppercase index
+    int k = 0;// lowercase index
+
     for (int i =0; i<j;i++){
-        if(lowerCase[i] < 91 && lowerCase[i] > 64){ //hvis de allerede er uppercase
-            upperCase[i] = lowerCase[i];
-        }else {
-            upperCase[i] = lowerCase[i] - 32;
+        if(lowerCase[k] < 91 && lowerCase[k] > 64){             //hvis de allerede er uppercase
+            upperCase[i] = lowerCase[k];
+        } else if(lowerCase[k] < 123 && lowerCase[k] > 96) {    // hvis de er lowercase
+            upperCase[i] = lowerCase[k] - 32;
+        } else{                                                 // hvis de ikke er et kendt tegn, så skipper den over tegnet og tager det næste input i stedet for.
+            i--;
+            j--;
+
         }
+        k++;
     }
  }
+
 
 void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
 
