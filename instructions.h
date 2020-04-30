@@ -96,40 +96,27 @@ void evalLDR(char * Instruction, char * binary) //takes an instruction in asm an
     strcat(binary, " "); //For easier reading
     Instruction += 3; //instruction-pointeren incrementes med 3 (svarer lidt til at slette de første 3 bogstaver ADD)
 
-    char * DR = strtok(Instruction,",");
-    char * SR1 = strtok(NULL,",");
-    char * offset6 = strtok(NULL, ",");
+    //TODO find ud af hvorfor, værdien af offset6 (token fra instruction) blev ændret, da alle tokens blev opdelt her
 
+    //First register
+    char * DR = strtok(Instruction,",");
     char DRBin[3] = {0};
     ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
     strcat(binary, DRBin);
     strcat(binary, " "); //For easier reading
 
+    //Second register
+    char * SR1 = strtok(NULL,",");
     char SR1Bin[3] = {0};
     ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
     strcat(binary, SR1Bin);
     strcat(binary, " "); //For easier reading
 
-
-    if(offset6[0] == '#'){
-        offset6 ++;  //increments pointer, resulting in 'removing' #
-
-        char offset[6] = {0};
-        int offsetInt = atoi(offset6); //casts imm5 to an int
-        DecimalToBinary(offsetInt, 6, offset);
-
-        strcat(binary, offset);
-
-    } else if(offset6[0] == 'x'){ //if its written in hexadecimal
-        offset6 ++;  //increments pointer, resulting in 'removing' #
-
-        char offset[6] = {0};
-        int offsetInt = atoi(offset6); //casts imm5 to an int
-        DecimalToBinary(offsetInt, 6, offset);
-
-        strcat(binary, offset);
-    }
-
+    //Offset6
+    char * offset6 = strtok(NULL, ",");
+    char offsetBin[6] = {0};
+    imm_offsetToBin(offset6,6,offsetBin); //call method to convert offset to binary
+    strcat(binary, offsetBin);
 
 }
 

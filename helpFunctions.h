@@ -50,6 +50,7 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
         int offset = noOfBits-inputLength;
         for (int i = 0; i < offset; i++) { //All bits untill the offset are set to the extension
             binOut[i] = extension;
+            binOut[i+1] = '\0'; //make sure, binOut has array terminator
         }
         //After the extension, input is appended to output
         strcat(binOut,binIn);
@@ -232,6 +233,27 @@ void hexToBin(char * hex, int noOfBits, char *binary)
 
 
 
+}
+
+
+void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
+    if(imm_offset[0] == '#'){
+        imm_offset ++;  //increments pointer, resulting in 'removing' #
+
+        char imm_offsetBin[] = {0};
+        int imm_offsetInt = atoi(imm_offset); //casts or offset to an int
+        DecimalToBinary(imm_offsetInt, numOfBits, imm_offsetBin); //converts to binary
+
+        strcat(binOut, imm_offsetBin);
+
+    } else if(imm_offset[0] == 'x'){ //if its written in hexadecimal
+        imm_offset ++;  //increments pointer, resulting in 'removing' x
+
+        char imm_offsetBin[] = {0};
+        hexToBin(imm_offset, numOfBits, imm_offsetBin); //converts to binary
+
+        strcat(binOut, imm_offsetBin);
+    }
 }
 
 
