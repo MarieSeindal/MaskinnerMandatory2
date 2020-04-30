@@ -138,7 +138,6 @@ void evalST(char * Instruction, char * binary){
     Instruction += 2; //incrementer pointeren
 
     char * SR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
-    char * PCoffset9 = strtok(NULL,","); //fortsætter med at kommaseperere
 
     char SRBin[3] = {0};
     ConvRegToBin(SR,SRBin);
@@ -146,18 +145,11 @@ void evalST(char * Instruction, char * binary){
     strcat(binary," "); //formatting
 
 
-     // en lidt hacket løsning
-    PCoffset9 +=1;
-    int imm_offsetInt = atoi(PCoffset9); //caster til int
-    char offsetBin[9] = {0};
-    DecimalToBinary(imm_offsetInt,9,offsetBin);
-    strcat(binary,offsetBin); //append to result
-
+    char * PCoffset9 = strtok(NULL,","); //fortsætter med at kommaseperere
 
 //en anden løsning (hvis den skulle have fulgt design)
-/*
     char offsetBin[9] = {0};
     imm_offsetToBin(PCoffset9,9,offsetBin); //converting offset to binary
     strcat(binary,offsetBin); //append to result
-*/
+
 }
