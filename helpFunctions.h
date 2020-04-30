@@ -246,19 +246,15 @@ void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
     if(imm_offset[0] == '#'){
         imm_offset ++;  //increments pointer, resulting in 'removing' #
 
-        char imm_offsetBin[] = {0};
         int imm_offsetInt = atoi(imm_offset); //casts or offset to an int
-        DecimalToBinary(imm_offsetInt, numOfBits, imm_offsetBin); //converts to binary
+        DecimalToBinary(imm_offsetInt, numOfBits, binOut); //converts to binary
 
-        strcat(binOut, imm_offsetBin);
 
     } else if(imm_offset[0] == 'x'){ //if its written in hexadecimal
         imm_offset ++;  //increments pointer, resulting in 'removing' x
 
-        char imm_offsetBin[] = {0};
-        hexToBin(imm_offset, numOfBits, imm_offsetBin); //converts to binary
+        hexToBin(imm_offset, numOfBits, binOut); //converts to binary
 
-        strcat(binOut, imm_offsetBin);
     }
 }
 
