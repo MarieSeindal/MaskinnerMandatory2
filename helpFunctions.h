@@ -61,13 +61,13 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 
 
 
-//void StrToUpper(char * lowerCase, char * upperCase){
+//void StrToUpperOLD(char * lowerCase, char * upperCase){
 //    int j = strlen(lowerCase);
 //
 //    for (int i =0; i<j;i++){
 //        if(lowerCase[i] < 91 && lowerCase[i] > 64){ //hvis de allerede er uppercase
 //            upperCase[i] = lowerCase[i];
-//        } else if(lowerCase[i] < 123 && lowerCase[i] > 96) { // hvis de er lowercase
+//        } else { // hvis de er lowercase
 //            upperCase[i] = lowerCase[i] - 32;
 //        }
 //    }
