@@ -43,7 +43,7 @@ int main() {
     printf("%s", bits);
 
 
-*/
+
     char UpperCase[20] = {0}; // et char array som er initialiseret til at være 0'er
     char testLowerCase[] = "m#m.D-a&R";
     StrToUpper(testLowerCase, UpperCase);
@@ -58,6 +58,9 @@ int main() {
     printf("Test af evalST: %s\n",STbin);
 */
 
+char bits[50] = {0};
+DecimalToBinary2(99,20,bits);
+printf("test af decToBin2: %s\n",bits);
 
 
     return 0;
