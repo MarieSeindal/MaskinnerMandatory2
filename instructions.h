@@ -19,21 +19,21 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
     strcat(binary, " "); //For easier reading
     Instruction += 3; //instruction-pointeren incrementes med 3 (svarer lidt til at slette de første 3 bogstaver ADD)
 
-    char * DR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
-    char * SR1 = strtok(NULL,","); //fortsætter med at kommaseperere
-    char * SR2_imm5 = strtok(NULL, ",");
 
+    //TODO Find ud af hvorfor der kommer fejl, når man "tokenizer" alle 3 med det samme
+    char * DR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
     char DRBin[3] = {0};
     ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
     strcat(binary, DRBin);
     strcat(binary, " "); //For easier reading
 
+    char * SR1 = strtok(NULL,","); //fortsætter med at kommaseperere
     char SR1Bin[3] = {0};
     ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
     strcat(binary, SR1Bin);
     strcat(binary, " "); //For easier reading
 
-
+    char * SR2_imm5 = strtok(NULL, ",");
     if(SR2_imm5[0] == 'R'){
         strcat(binary,"000"); //appends 000 bc its a register
         strcat(binary, " "); //For easier reading
@@ -45,7 +45,16 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
     } else {
         strcat(binary, "1"); //appends 1 bc its an immediate value
         strcat(binary, " "); //For easier reading
-        if(SR2_imm5[0] == '#'){
+
+        //Offset6
+        char immBin[6] = {0};
+        imm_offsetToBin(SR2_imm5,6,immBin); //call method to convert offset to binary
+        strcat(binary, immBin);
+
+        //NOTE den nedefor udkommenterede kode har fået sin egen metode imm_offsetToBin() da den skal skrives mange gange
+        //TODO fjern den udkommenterede kode, når alle har set det
+        /*
+                 if(SR2_imm5[0] == '#'){
             SR2_imm5 ++;  //increments pointer, resulting in 'removing' #
 
             char immBin[5] = {0};
@@ -58,6 +67,7 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
         } else if(SR2_imm5[0] == 'x'){ //if its written in hexadecimal
 
         }
+         */
     }
 
 
