@@ -52,7 +52,7 @@ int main() {
     char STbin[16+5] = {0};
     char STtest[] = "STR7,#8";
     evalST(STtest,STbin);
-    printf("\n%s\n",STbin);
+    printf("Test af evalST: %s\n",STbin);
 
 
 
