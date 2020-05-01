@@ -4,7 +4,7 @@
 
 
 void evalTest();
-void EvalInstruction(char * assembly, char * binary);
+void evalInstruction(char * assembly, char * binary);
 
 int main() {
 /*
@@ -56,12 +56,18 @@ int main() {
     char STtest[] = "STR7,#8";
     evalST(STtest,STbin);
     printf("Test af evalST: %s\n",STbin);
-*/
 
     char noSpace[16+5] = {0};
     char withSpaceTest[] = "ST R7 , #      8";
     removeSpaces(withSpaceTest,noSpace);
     printf("Test af removeSpaces: %s\n",noSpace);
+*/
+
+    char instructionBin[16+5] = {0};
+    char instructionAsm[] = "ADD, R1, R2, #3";
+    evalInstruction(instructionAsm,instructionBin);
+    printf("Test af evalInstruction: %s\n",instructionBin);
+
 
 
 char bits[50] = {0};
@@ -73,9 +79,9 @@ printf("test af decToBin2: %s\n",bits);
 }
 
 
-void EvalInstruction(char * assembly, char * binary){
+void evalInstruction(char * assembly, char * binary){
     char withoutSpace[30] = {0};
-    // RemoveSpaces(assembly, withoutSpace);
+    removeSpaces(assembly, withoutSpace);
     char Instruction[30] = {0};
     StrToUpper(withoutSpace, Instruction);
 
