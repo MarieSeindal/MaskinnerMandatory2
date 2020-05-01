@@ -132,12 +132,4 @@ void evalST(char * Instruction, char * binary){
     strcat(binary,offsetBin); //append to result
 
 
-    /*
-   // en lidt hacket løsning
-    PCoffset9 +=1;
-    int imm_offsetInt = atoi(PCoffset9); //caster til int
-    char offsetBin[9] = {0};
-    DecimalToBinary(imm_offsetInt,9,offsetBin);
-    strcat(binary,offsetBin); //append to result
- */
 }
