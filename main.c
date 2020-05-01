@@ -61,12 +61,15 @@ int main() {
     char withSpaceTest[] = "ST R7 , #      8";
     removeSpaces(withSpaceTest,noSpace);
     printf("Test af removeSpaces: %s\n",noSpace);
-*/
 
     char instructionBin[16+5] = {0};
-    char instructionAsm[] = "ADD, R1, R2, #3";
+    char * instructionAsm = "ADD, R1, R2, #3";
     evalInstruction(instructionAsm,instructionBin);
     printf("Test af evalInstruction: %s\n",instructionBin);
+
+*/
+
+
 
 
 
@@ -74,6 +77,17 @@ char bits[50] = {0};
 DecimalToBinary2(99,20,bits);
 printf("test af decToBin2: %s\n",bits);
 
+
+
+
+    char instructionBin[16+5] = {0};
+    char * instructionAsm;
+
+
+    printf("%s\n","Type instruction:");
+    scanf("%99[^\n]",instructionAsm); //Lidt specielt format af scanf her - den indlæser en hel linje i stedet for bare et ord
+    evalInstruction(instructionAsm,instructionBin);
+    printf("Test af evalInstruction: %s\n",instructionBin);
 
     return 0;
 }
