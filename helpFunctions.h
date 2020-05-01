@@ -13,7 +13,20 @@
 
 
 
-//void RemoveSpaces(char* withSpaces, char * withoutSpaces){}
+void removeSpaces(char* withSpaces, char * withoutSpaces){
+    int j=0;
+    int i=0;
+    while(withSpaces[i] != '\0'){ //While we haven't reached the end of withSpaces
+        if (withSpaces[i] != ' ' && withSpaces[i] != '\t'){ //If it's not space or tab
+            withoutSpaces[j]=withSpaces[i]; //add to withoutSpace
+            j++; //increment withoutSpace index
+        }
+        i++; //increment withSpace index
+    }
+    withoutSpaces[j+1]='\0'; //make sure, withoutSpaces ends correctly
+
+
+}
 
 
 void signExtendBinary(char * binIn, int noOfBits, char *binOut)

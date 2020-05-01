@@ -58,6 +58,12 @@ int main() {
     printf("Test af evalST: %s\n",STbin);
 */
 
+    char noSpace[16+5] = {0};
+    char withSpaceTest[] = "ST R7 , #      8";
+    removeSpaces(withSpaceTest,noSpace);
+    printf("Test af removeSpaces: %s\n",noSpace);
+
+
 char bits[50] = {0};
 DecimalToBinary2(99,20,bits);
 printf("test af decToBin2: %s\n",bits);
