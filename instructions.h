@@ -20,7 +20,6 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
     Instruction += 3; //instruction-pointeren incrementes med 3 (svarer lidt til at slette de første 3 bogstaver ADD)
 
 
-    //TODO Find ud af hvorfor der kommer fejl, når man "tokenizer" alle 3 med det samme
     char * DR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
     char DRBin[4] = {0};
     ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
@@ -51,23 +50,6 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
         imm_offsetToBin(SR2_imm5,6,immBin); //call method to convert offset to binary
         strcat(binary, immBin);
 
-        //NOTE den nedefor udkommenterede kode har fået sin egen metode imm_offsetToBin() da den skal skrives mange gange
-        //TODO fjern den udkommenterede kode, når alle har set det
-        /*
-                 if(SR2_imm5[0] == '#'){
-            SR2_imm5 ++;  //increments pointer, resulting in 'removing' #
-
-            char immBin[5] = {0};
-            int imm5int = atoi(SR2_imm5); //casts imm5 to an int
-            //int imm5int = (int)SR2_imm5[0]-48; //casts imm5 to an int
-            DecimalToBinary(imm5int,5,immBin);
-
-            strcat(binary, immBin);
-
-        } else if(SR2_imm5[0] == 'x'){ //if its written in hexadecimal
-
-        }
-         */
     }
 
 
@@ -106,7 +88,6 @@ void evalLDR(char * Instruction, char * binary) //takes an instruction in asm an
     strcat(binary, " "); //For easier reading
     Instruction += 3; //instruction-pointeren incrementes med 3 (svarer lidt til at slette de første 3 bogstaver ADD)
 
-    //TODO find ud af hvorfor, værdien af offset6 (token fra instruction) blev ændret, da alle tokens blev opdelt her
 
     //First register
     char * DR = strtok(Instruction,",");
@@ -145,8 +126,6 @@ void evalST(char * Instruction, char * binary){
     strcat(binary,SRBin); //appends binary register to result
     strcat(binary," "); //formatting
 
-
-    //Denne løsning skulle gerne virke nu TODO fjern kommentaren hvis det er rigtigt
 
     char offsetBin[9] = {0};
     imm_offsetToBin(PCoffset9,9,offsetBin); //converting offset to binary
