@@ -104,13 +104,13 @@ void evalInstruction(char * assembly, char * binary){
         evalADD(Instruction, binary);
 
     }else if(strstr(Instruction, "NOT") != NULL){
-
+        evalNOT(Instruction, binary);
     }else if(strstr(Instruction, "LDR") != NULL){
-
+        evalLDR(Instruction, binary);
     }else if(strstr(Instruction, "LD") != NULL){
 
     }else if(strstr(Instruction, "ST") != NULL){
-
+        evalST(Instruction, binary);
     }else if(strstr(Instruction, "BR") != NULL){
 
     }else{//error
