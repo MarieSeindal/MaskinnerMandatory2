@@ -22,13 +22,13 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
 
     //TODO Find ud af hvorfor der kommer fejl, når man "tokenizer" alle 3 med det samme
     char * DR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
-    char DRBin[3] = {0};
+    char DRBin[4] = {0};
     ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
     strcat(binary, DRBin);
     strcat(binary, " "); //For easier reading
 
     char * SR1 = strtok(NULL,","); //fortsætter med at kommaseperere
-    char SR1Bin[3] = {0};
+    char SR1Bin[4] = {0};
     ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
     strcat(binary, SR1Bin);
     strcat(binary, " "); //For easier reading
@@ -38,7 +38,7 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
         strcat(binary,"000"); //appends 000 bc its a register
         strcat(binary, " "); //For easier reading
 
-        char SR2Bin[3] = {0}; //initialize array for binaryReg
+        char SR2Bin[4] = {0}; //initialize array for binaryReg
         ConvRegToBin(SR2_imm5,SR2Bin); //converts register to binary
         strcat(binary, SR2Bin); // appends to binary
 
@@ -83,12 +83,12 @@ void evalNOT(char * Instruction, char * binary)
         char * DR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
         char * SR1 = strtok(NULL,","); //fortsætter med at kommaseperere
 
-        char DRBin[3] = {0};
+        char DRBin[4] = {0};
         ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
         strcat(binary, DRBin);
         strcat(binary, " "); //For easier reading
 
-        char SR1Bin[3] = {0};
+        char SR1Bin[4] = {0};
         ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
         strcat(binary, SR1Bin);
         strcat(binary, " "); //For easier reading
@@ -110,14 +110,14 @@ void evalLDR(char * Instruction, char * binary) //takes an instruction in asm an
 
     //First register
     char * DR = strtok(Instruction,",");
-    char DRBin[3] = {0};
+    char DRBin[4] = {0};
     ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
     strcat(binary, DRBin);
     strcat(binary, " "); //For easier reading
 
     //Second register
     char * SR1 = strtok(NULL,",");
-    char SR1Bin[3] = {0};
+    char SR1Bin[4] = {0};
     ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
     strcat(binary, SR1Bin);
     strcat(binary, " "); //For easier reading
@@ -138,15 +138,16 @@ void evalST(char * Instruction, char * binary){
     Instruction += 2; //incrementer pointeren
 
     char * SR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
+    char * PCoffset9 = strtok(NULL,","); //fortsætter med at kommaseperere
 
-    char SRBin[3] = {0};
+    char SRBin[4] = {0};
     ConvRegToBin(SR,SRBin);
     strcat(binary,SRBin); //appends binary register to result
     strcat(binary," "); //formatting
 
 
     //Denne løsning skulle gerne virke nu TODO fjern kommentaren hvis det er rigtigt
-    char * PCoffset9 = strtok(NULL,","); //fortsætter med at kommaseperere
+
     char offsetBin[9] = {0};
     imm_offsetToBin(PCoffset9,9,offsetBin); //converting offset to binary
     strcat(binary,offsetBin); //append to result

@@ -77,7 +77,10 @@ char bits[50] = {0};
 DecimalToBinary2(99,20,bits);
 printf("test af decToBin2: %s\n",bits);
 
-
+    char STbin[16+5] = {0};
+    char STtest[] = "STR7,#8";
+    evalST(STtest,STbin);
+    printf("Test af evalST: %s\n",STbin);
 
 
     char instructionBin[16+5] = {0};
