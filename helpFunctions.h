@@ -276,6 +276,97 @@ void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
 
 
 
+int getOpcode(char * firstToken){
+    //Input: firstToken - a string containing the first space-separated token of an instruction line
+    //         If it is an instruction mnemonic, returns opcode
+    //         If it is a directive, returns a special number identityfying that directive
+    //         If it is neither - it must be a label and -1 is returned
+
+    //Check if it matches any of the instructions or directives
+    if (strcmp(firstToken,"ADD") == 0){
+        return 1;
+    } else if (strcmp(firstToken,"AND") == 0){
+        return 5;
+    } else if (!( //branch can be written in 8 different ways
+            strcmp(firstToken,"BR") || strcmp(firstToken,"BRN") || strcmp(firstToken,"BRP") || strcmp(firstToken,"BRZ")
+            || strcmp(firstToken,"BRNZ") || strcmp(firstToken,"BRNP") || strcmp(firstToken,"BRPZ") || strcmp(firstToken,"BRNZP"))
+            ){
+        return 0;
+    } else if (strcmp(firstToken,"JMP") == 0 ||strcmp(firstToken,"RET") == 0){
+        return 4;
+    } else if (strcmp(firstToken,"JSR") ==0 || strcmp(firstToken,"JSRR") == 0){
+        return 5;
+    } else if (strcmp(firstToken,"LD") == 0){
+        return 2;
+    } else if (strcmp(firstToken,"LDI") == 0){
+        return 10;
+    } else if (strcmp(firstToken,"LDR") == 0){
+        return 6;
+    } else if (strcmp(firstToken,"LEA") == 0){
+        return 14;
+    } else if (strcmp(firstToken,"NOT") == 0){
+        return 9;
+    } else if (strcmp(firstToken,"RTI") == 0){
+        return 8;
+    } else if (strcmp(firstToken,"ST") == 0){
+        return 3;
+    } else if (strcmp(firstToken,"STI") == 0){
+        return 11;
+    } else if (strcmp(firstToken,"STR") == 0){
+        return 7;
+    } else if (strcmp(firstToken,"TRAP") == 0){
+        return 15;
+    }
+    //The following are the directives. They don't have an opcode, but here we assign them a number
+    else if (strcmp(firstToken,".ORIG") == 0){
+        return 16;
+    } else if (strcmp(firstToken,".FILL") == 0){
+        return 17;
+    } else if (strcmp(firstToken,".BLKW") == 0){
+        return 18;
+    } else if (strcmp(firstToken,".SRINGZ") == 0){
+        return 19;
+    } else if (strcmp(firstToken,".END") == 0){
+        return 20;
+
+    } else { //If it was neither - return -1 to indicate that token was not an opcode
+        return -1;
+    }
+}
+
+int hasLabel(char * asmLine, int * pOpcode){
+    //Input:            asmLine - and unprocessed line of assembly code
+    //Simulated Input:  return - a pointer to an int, that stores the opcode of the instruction or a number telling which directive it is
+    //Output:           hasLabel - 1 if the first token of the line is a label, 0 otherwise
+    //NOTE: Why does this function also return the opcode? Because opcode and whether it has a label is determined at the same time
+
+    //create copy of asmLine so it doesn't get changed
+    char asmCopy[30];
+    strcpy(asmCopy,asmLine);
+
+    char * firstToken = strtok(asmCopy," \t"); //the delimitter is both tab and space - will separate if it sees any
+    //This first token should EITHER be a label OR a known instruction/directive.
+
+    //Call method to determine the opcode
+    int opcode = getOpcode(firstToken);
+
+    if (opcode != -1){      //If it's a real opcode and not just a label
+        *pOpcode = opcode;
+        return 0;           //Return that it has no label
+
+    } else {                //If it was just a label
+        //get next token and try again
+        char * secondToken = strtok(NULL," \t"); //gets next token
+        opcode = getOpcode(secondToken);
+        * pOpcode = opcode;
+        return 1; //Return that is has a label
+    }
+}
+
+
+
+
+
 
 
 
