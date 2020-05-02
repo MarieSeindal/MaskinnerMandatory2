@@ -5,6 +5,7 @@
 
 void evalTest();
 void evalInstruction();
+void secondPass();
 
 int main() {
 /*
@@ -187,6 +188,30 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
     }
+
+
+
+}
+
+
+void secondPass(){
+    FILE* inStream;
+    char fileLocation[] = "C:\\Users\\peter\\Documents\\asm.txt";
+    inStream = fopen(fileLocation, "r");
+    if (!inStream) {
+        //Error - file not found
+        printf("%s\n","Error - File not found.");
+    }
+
+    char binLine[22] = {0};
+    int bufferLength = 255;
+    char asmLine[bufferLength];
+    while(fgets(asmLine, bufferLength, inStream)) {
+        evalInstruction(asmLine,binLine);
+        printf(binLine);
+        printf("\n");
+    }
+
 
 
 

@@ -187,7 +187,7 @@ void hexToBin(char * hex, int noOfBits, char *binary)
     char tempOutput[inputHexLength*4];
     tempOutput[0]='\0';
 
-    //Go thorugh input and append corresponding binary values to tempOutPut
+    //Go through input and append corresponding binary values to tempOutPut
     int i =0;
     while (hex[i]!= '\0'){
 
@@ -246,6 +246,7 @@ void hexToBin(char * hex, int noOfBits, char *binary)
         }
         i++;
     }
+
 
     //Call signExtend function to format the number correctly
     signExtendBinary(tempOutput,noOfBits,binary);
