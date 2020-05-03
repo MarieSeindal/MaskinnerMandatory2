@@ -67,8 +67,6 @@ int main() {
     evalInstruction(instructionAsm,instructionBin);
     printf("Test af evalInstruction: %s\n",instructionBin);
 
-*/
-
 
     char bits[50] = {0};
     DecimalToBinary2(99,20,bits);
@@ -88,6 +86,11 @@ int main() {
     scanf("%99[^\n]",instructionAsm); //Lidt specielt format af scanf her - den indlæser en hel linje i stedet for bare et ord
     evalInstruction(instructionAsm,instructionBin);
     printf("Test af evalInstruction: %s\n",instructionBin);
+
+*/
+
+    secondPass();
+
 
     return 0;
 }
@@ -194,23 +197,79 @@ void evalInstruction(char * assembly, char * binary){
 }
 
 
-void secondPass(){
+void firstPass(){
+    //TODO unfinished
+    //In first pass, we read the asm file and create the symbol table.
+    //Symbol table should not be global/static/something, so it can be read from everywhere
+
+
+
+    char inFileLocation[] = "C:\\Users\\peter\\Documents\\asm.txt"; //TODO har ikke kunne få det til at virke, hvor filerne ligger i projektroden
+
+    //Initialize input stream
     FILE* inStream;
-    char fileLocation[] = "C:\\Users\\peter\\Documents\\asm.txt";
-    inStream = fopen(fileLocation, "r");
-    if (!inStream) {
-        //Error - file not found
-        printf("%s\n","Error - File not found.");
+    inStream = fopen(inFileLocation, "r"); //Open file at file location in reading mode
+    if (!inStream) {                                //If it is not found
+        printf("%s\n","Error - Input file not found.");
     }
 
-    char binLine[22] = {0};
-    int bufferLength = 255;
-    char asmLine[bufferLength];
-    while(fgets(asmLine, bufferLength, inStream)) {
-        evalInstruction(asmLine,binLine);
-        printf(binLine);
-        printf("\n");
+    struct label{
+        char name[10]; //Assume that labelnames are of max length 10
+        int address; //TODO måske bør det ikke være en int, men en bitstreng
+    };
+
+    //Get size of file
+    fseek(inStream, 0, SEEK_END);   // seek to end of file
+    int fileSize = ftell(inStream);         // get current file pointer
+    fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
+
+    //NOTE: Symbol table could be made using dynamic data structure like linked list - that would be best TODO - make a linked list
+    //Much easier to use an array. Smallest possible avg. size of an asm-line is 5 chars=5 bytes e.g "BR x\n"
+    //So symboltable cannot be any longer that filesize/5 - even if all lines have labels
+    int maxSymbolTableSize = sizeof(struct label)*fileSize/5;
+
+    //TODO make a static symbol table, that can be used in 2nd pass also
+
+
+}
+
+
+void secondPass(){
+    //TODO gør fil-lokationerne smartere
+    char inFileLocation[] = "C:\\Users\\peter\\Documents\\asm.txt"; //Note - har ikke kunne få det til at virke, hvor filerne ligger i projektroden
+    char outFileLocation[] = "C:\\Users\\peter\\Documents\\bin.txt";
+
+    //Initialize input stream
+    FILE* inStream;
+    inStream = fopen(inFileLocation, "r"); //Open file at file location in reading mode
+    if (!inStream) { //If it is not found
+        //Error - file not found
+        printf("%s\n","Error - Input file not found.");
     }
+
+
+
+    //Initialize output stream
+    FILE* outStream;
+    outStream = fopen(outFileLocation, "a"); //append mode
+    //If outfile is not found, it will create it.
+
+
+    //Arrays to hold each asm line and corresponding bin line
+    int bufferLength = 255; //won't be able to read any line longer than 255 chars
+    char asmLine[bufferLength];
+    char binLine[22] = {0};
+
+
+    //TODO det ville nok være bedre at bruge fscanf(), men kan ikke få den til at virke - Peter
+    while(fgets(asmLine, bufferLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
+        evalInstruction(asmLine,binLine);               //Evaluate the instruction
+        fprintf(outStream, "%s\n", binLine);    //Print/append to output file
+
+        //Clear binLine
+        binLine[0]='\0';
+    }
+
 
 
 
