@@ -13,7 +13,7 @@
 
 
 
-void removeSpaces(char* withSpaces, char * withoutSpaces){
+void removeSpaces(const char* withSpaces, char * withoutSpaces){
     int j=0;
     int i=0;
     while(withSpaces[i] != '\0'){ //While we haven't reached the end of withSpaces
@@ -39,7 +39,7 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
 {
     //Calculate size of hex-array in unorthodox way, since sizeof() doesn't work on dynamically allocated array
     int inputLength =0;
-    while (binIn[inputLength] != NULL){
+    while (binIn[inputLength] != '\0'){
         inputLength++;
     }
 
@@ -81,11 +81,9 @@ void StrToUpper(char * lowerCase, char * upperCase){
     // int i = uppercase index
 
     for (int i =0; i<j;i++){
-        if(lowerCase[i] < 91 && lowerCase[i] > 64){             //hvis de allerede er uppercase
-            upperCase[i] = lowerCase[i];
-        } else if(lowerCase[i] < 123 && lowerCase[i] > 96) {    // hvis de er lowercase
+         if(lowerCase[i] < 123 && lowerCase[i] > 96) {    //If it is a lowercase letter
             upperCase[i] = lowerCase[i] - 32;
-        } else{                                                 // hvis de ikke er et kendt tegn, så skipper den over tegnet og tager det næste input i stedet for.
+        } else{                                           //If it is not a lowercase letter
             upperCase[i] = lowerCase[i];
         }
     }
@@ -122,7 +120,7 @@ void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
 
     // 13 .... antl bit =4
 
-    for (forCounter; forCounter >= 0; forCounter-- ){
+    for (; forCounter >= 0; forCounter-- ){
 
         bits[forCounter-1]=bit[count2];
 
@@ -170,7 +168,7 @@ void ConvRegToBin(char * Register, char * BinReg){
 
 }
 
-void hexToBin(char * hex, int noOfBits, char *binary)
+void hexToBin(const char * hex, int noOfBits, char *binary)
 //input: char * hex - a string describing a number in the hexadecimal format
 //       int noOfBits - how many bits the output should be sign-extended to
 //Output: char * binary - a bit string in 2's complment format describing the same number as the input
@@ -179,7 +177,7 @@ void hexToBin(char * hex, int noOfBits, char *binary)
 
     //Calculates length of input (in wierd way, since sizeOf() doesn't work for dynamically allocated arrays)
     int inputHexLength =0;
-    while (hex[inputHexLength] != NULL){
+    while (hex[inputHexLength] != '\0'){
         inputHexLength++;
     }
 
