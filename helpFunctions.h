@@ -182,7 +182,7 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
     }
 
     //Allocate space for sub-result (correct number but not correct length)
-    char tempOutput[inputHexLength*4];
+    char tempOutput[inputHexLength*4+1];
     tempOutput[0]='\0';
 
     //Go through input and append corresponding binary values to tempOutPut
@@ -286,14 +286,13 @@ int getOpcode(char * firstToken){
         return 1;
     } else if (strcmp(firstToken,"AND") == 0){
         return 5;
-    } else if (//branch can be written in 8 different ways
-            strcmp(firstToken,"BRNZ")==0
-
-    /*
-     strcmp(firstToken,"BR") || strcmp(firstToken,"BRN") || strcmp(firstToken,"BRP") || strcmp(firstToken,"BRZ")
-            || strcmp(firstToken,"BRNZ") || strcmp(firstToken,"BRNP") || strcmp(firstToken,"BRPZ") || strcmp(firstToken,"BRNZP")
-
-     */
+    } else if (//branch can be written in a lot different ways TODO do this in a smarter way if possible
+            strcmp(firstToken,"BR") == 0|| strcmp(firstToken,"BRN")  == 0|| strcmp(firstToken,"BRP")  == 0|| strcmp(firstToken,"BRZ")  == 0
+            || strcmp(firstToken,"BRNZ")  == 0|| strcmp(firstToken,"BRNP")  == 0|| strcmp(firstToken,"BRPZ")  == 0|| strcmp(firstToken,"BRPN") == 0
+            || strcmp(firstToken,"BRZN")  == 0|| strcmp(firstToken,"BRZP")  == 0
+            || strcmp(firstToken,"BRNPZ")  == 0|| strcmp(firstToken,"BRNZP") == 0
+            || strcmp(firstToken,"BRPNZ")  == 0|| strcmp(firstToken,"BRPZN") == 0
+            || strcmp(firstToken,"BRPZNP")  == 0|| strcmp(firstToken,"BRZPN") == 0
             ){
         return 0;
     } else if (strcmp(firstToken,"JMP") == 0 ||strcmp(firstToken,"RET") == 0){
@@ -345,7 +344,7 @@ int hasLabel(char * asmLine, int * pOpcode){
     //NOTE: Why does this function also return the opcode? Because opcode and whether it has a label is determined at the same time
 
     //create copy of asmLine so it doesn't get changed
-    char asmCopy[30];
+    char asmCopy[35];
     strcpy(asmCopy,asmLine);
 
     char * firstToken = strtok(asmCopy," \t"); //the delimitter is both tab and space - will separate if it sees any

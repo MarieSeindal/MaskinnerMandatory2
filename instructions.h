@@ -47,7 +47,7 @@ void evalADD(char * Instruction, char * binary) //takes an instruction in asm an
 
         //Offset6
         char immBin[6] = {0};
-        imm_offsetToBin(SR2_imm5,6,immBin); //call method to convert offset to binary
+        imm_offsetToBin(SR2_imm5,5,immBin); //call method to convert offset to binary
         strcat(binary, immBin);
     }
 }
@@ -99,7 +99,7 @@ void evalLDR(char * Instruction, char * binary) //takes an instruction in asm an
 
     //Offset6
     char * offset6 = strtok(NULL, ",");
-    char offsetBin[6] = {0};
+    char offsetBin[7] = {0};
     imm_offsetToBin(offset6,6,offsetBin); //call method to convert offset to binary
     strcat(binary, offsetBin);
 
@@ -122,7 +122,7 @@ void evalST(char * Instruction, char * binary){
     strcat(binary," "); //formatting
 
 
-    char offsetBin[9] = {0};
+    char offsetBin[10] = {0};
     imm_offsetToBin(PCoffset9,9,offsetBin); //converting offset to binary
     strcat(binary,offsetBin); //append to result
 
@@ -166,7 +166,7 @@ void evalAND(char * Instruction, char * binary) //takes an instruction in asm an
 
         //Offset6
         char immBin[6] = {0};
-        imm_offsetToBin(SR2_imm5,6,immBin); //call method to convert offset to binary
+        imm_offsetToBin(SR2_imm5,5,immBin); //call method to convert offset to binary
         strcat(binary, immBin);
 
     }
@@ -179,14 +179,17 @@ void evalBR(char * Instruction, char * binary)
     //opcode to binary
     strcat(binary, "0000"); //appends opcode in binary to the output array
     strcat(binary, " "); //For easier reading
-    //Get first SPACE-separated token to determine which type of BR-instuction it is
 
+    //Get first SPACE-separated token to determine which type of BR-instuction it is
     char * mnemonic = strtok(Instruction," \t");
 
+    //Determine if it contains N, Z and P
     int N = strstr(mnemonic,"N");
     int Z = strstr(mnemonic,"Z");
     int P = strstr(mnemonic,"P");
 
+
+    //add corresponding bits (condition codes)
     if (N){
         strcat(binary,"1");
     } else{
@@ -203,7 +206,7 @@ void evalBR(char * Instruction, char * binary)
         strcat(binary,"0");
     }
 
-    strcat(binary,"0");//For readability
+    strcat(binary," ");//For readability
 
     char * imm = strtok(NULL,""); //Get the rest of the instruction string
     char immBin[10] = {0}; //imm9 + one bit for termination
