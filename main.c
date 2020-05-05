@@ -128,6 +128,10 @@ void evalInstruction(char * assembly, char * binary){
 
 
     switch (opcode){
+        case 0:
+            evalBR(instruction, binary); //Specifically for BR it is important to have the spaces to evaluate
+            //Therefore instruction is passed instead of withoutSpace
+            break;
         case 1:
             evalADD(withoutSpace, binary);
             break;
@@ -141,7 +145,7 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
         case 5:
-
+            evalAND(withoutSpace,binary);
             break;
         case 6:
             evalLDR(withoutSpace,binary);

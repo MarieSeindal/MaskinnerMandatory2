@@ -286,9 +286,14 @@ int getOpcode(char * firstToken){
         return 1;
     } else if (strcmp(firstToken,"AND") == 0){
         return 5;
-    } else if (!( //branch can be written in 8 different ways
-            strcmp(firstToken,"BR") || strcmp(firstToken,"BRN") || strcmp(firstToken,"BRP") || strcmp(firstToken,"BRZ")
-            || strcmp(firstToken,"BRNZ") || strcmp(firstToken,"BRNP") || strcmp(firstToken,"BRPZ") || strcmp(firstToken,"BRNZP"))
+    } else if (//branch can be written in 8 different ways
+            strcmp(firstToken,"BRNZ")==0
+
+    /*
+     strcmp(firstToken,"BR") || strcmp(firstToken,"BRN") || strcmp(firstToken,"BRP") || strcmp(firstToken,"BRZ")
+            || strcmp(firstToken,"BRNZ") || strcmp(firstToken,"BRNP") || strcmp(firstToken,"BRPZ") || strcmp(firstToken,"BRNZP")
+
+     */
             ){
         return 0;
     } else if (strcmp(firstToken,"JMP") == 0 ||strcmp(firstToken,"RET") == 0){
