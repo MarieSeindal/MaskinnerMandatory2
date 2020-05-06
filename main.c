@@ -126,7 +126,7 @@ void evalInstruction(char * assembly, char * binary){
     int labelFirst;
     labelFirst = hasLabel(instruction, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
 
-    char * tempInstruction; //TODO: skal den ikke assignes noget plads?
+    char * tempInstruction[30] = {0};
 
     if (labelFirst){ //remove the label, since it's not going to be used here (this function should be used in 2nd pass)
         strtok(instruction, " \t"); //make strtok remove the label
