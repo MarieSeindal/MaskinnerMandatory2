@@ -223,7 +223,7 @@ void firstPass(){
     //Symbol table should not be global/static/something, so it can be read from everywhere
 
 
-    char inFileLocation[] = "asm.txt"; //TODO har ikke kunne få det til at virke, hvor filerne ligger i projektroden
+    char inFileLocation[] = "asm.txt";
 
     //Initialize input stream
     FILE* inStream;
@@ -254,7 +254,6 @@ void firstPass(){
 
 
 void secondPass(){
-    //TODO gør fil-lokationerne smartere
     char inFileLocation[] = "asm.txt"; //Note - har ikke kunne få det til at virke, hvor filerne ligger i projektroden
     char outFileLocation[] = "bin.txt";
 
