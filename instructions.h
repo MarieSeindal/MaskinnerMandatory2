@@ -105,7 +105,8 @@ void evalLDR(char * Instruction, char * binary) //takes an instruction in asm an
 
 }
 
-void evalST(char * Instruction, char * binary){
+void evalST(char * Instruction, char * binary)  //TODO add logic for handling labels
+{
     //opcode to binary
     strcat(binary,"0011");
     strcat(binary," "); //formatting
@@ -114,7 +115,6 @@ void evalST(char * Instruction, char * binary){
     char * SR = strtok(Instruction,","); //strtok er en tokenizer som er i stand til at dele strengen ved et komma
     char * PCoffset9 = strtok(NULL,","); //fortsætter med at kommaseperere
 
-    //TODO add logic here to take into account, if second argument is a label
 
     char SRBin[4] = {0};
     ConvRegToBin(SR,SRBin);
@@ -212,7 +212,59 @@ void evalBR(char * Instruction, char * binary) //TODO add logic for handling lab
     char immBin[10] = {0}; //imm9 + one bit for termination
     imm_offsetToBin(imm,9,immBin); //call method to convert offset to binary
     strcat(binary, immBin);
+}
+
+void evalJMP(char * Instruction, char * binary) //TODO add logic for handling labels
+{
+    //opcode to binary
+    strcat(binary, "1100"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+
+    //This function may be called both if it is JMP or RET - they have same opcode
+    //Both have 3 0's here
+    strcat(binary, "000"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+
+    //Determine which it is
+    if (Instruction[0]=='J'){//If first char is J it must be JMP
+        //Delete JMP from Instruction
+        Instruction+=3;
+
+        //Rest of the Instruction must be the base register
+        char BaseRBin[4] = {0}; //initialize array for binaryReg
+        ConvRegToBin(Instruction,BaseRBin); //converts register to binary
+        strcat(binary, BaseRBin); // appends to binary
+    } else{ //If it is RET, just append "111"
+        strcat(binary, "111"); //appends opcode in binary to the output array
+    }
+
+    strcat(binary, " "); //For easier reading
+
+    //Last 6 bits are 0
+    strcat(binary, "000000");
 
 
+}
 
+void evalLD(char * Instruction, char * binary) //TODO add logic for handling labels
+{
+    //opcode to binary
+    strcat(binary, "0010"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+
+    //Delete "LD"
+    Instruction+=2;
+
+    //Destination Register
+    char * DR = strtok(Instruction,",");
+    char DRBin[4] = {0};
+    ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
+    strcat(binary, DRBin);
+
+    strcat(binary," ");//For readability
+
+    char * PCoffset9 = strtok(NULL,","); //Rest of the instruction is the offset
+    char offsetBin[10] = {0};
+    imm_offsetToBin(PCoffset9,9,offsetBin); //converting offset to binary
+    strcat(binary,offsetBin); //append to result
 }

@@ -262,8 +262,8 @@ void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
         DecimalToBinary(imm_offsetInt, numOfBits, binOut); //converts to binary
 
 
-    } else if(imm_offset[0] == 'x'){ //if its written in hexadecimal
-        imm_offset ++;  //increments pointer, resulting in 'removing' x
+    } else if(imm_offset[0] == 'X'){ //if its written in hexadecimal
+        imm_offset ++;  //increments pointer, resulting in 'removing' X
 
         hexToBin(imm_offset, numOfBits, binOut); //converts to binary
 
@@ -296,7 +296,7 @@ int getOpcode(char * firstToken){
             ){
         return 0;
     } else if (strcmp(firstToken,"JMP") == 0 ||strcmp(firstToken,"RET") == 0){
-        return 4;
+        return 12;
     } else if (strcmp(firstToken,"JSR") ==0 || strcmp(firstToken,"JSRR") == 0){
         return 5;
     } else if (strcmp(firstToken,"LD") == 0){

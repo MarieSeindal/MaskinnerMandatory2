@@ -152,7 +152,7 @@ void evalInstruction(char * assembly, char * binary){
             evalADD(withoutSpace, binary);
             break;
         case 2:
-
+            evalLD(withoutSpace, binary);
             break;
         case 3:
             evalST(withoutSpace,binary);
@@ -182,7 +182,7 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
         case 12:
-
+            evalJMP(withoutSpace,binary);
             break;
         case 13:
 
