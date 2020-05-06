@@ -79,7 +79,9 @@ int main() {
     printf("Test af evalST: %s\n",STbin);
 
 */
-    char instructionBin[16+5] = {0};
+
+/*
+  char instructionBin[16+5] = {0};
     char instructionAsm[40] = {0};
 
 
@@ -87,9 +89,11 @@ int main() {
     scanf("%99[^\n]",instructionAsm); //Lidt specielt format af scanf her - den indlæser en hel linje i stedet for bare et ord
     //evalInstruction(instructionAsm,instructionBin);
     printf("Test af evalInstruction: %s\n",instructionBin);
+ */
 
 
-    //secondPass();
+
+    secondPass();
 
 
     return 0;
@@ -126,7 +130,7 @@ void evalInstruction(char * assembly, char * binary){
     int labelFirst;
     labelFirst = hasLabel(instruction, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
 
-    char * tempInstruction[30] = {0};
+    char * tempInstruction = {0};
 
     if (labelFirst){ //remove the label, since it's not going to be used here (this function should be used in 2nd pass)
         strtok(instruction, " \t"); //make strtok remove the label
