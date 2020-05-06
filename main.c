@@ -78,26 +78,22 @@ int main() {
     evalST(STtest,STbin);
     printf("Test af evalST: %s\n",STbin);
 
-
+*/
     char instructionBin[16+5] = {0};
-    char * instructionAsm;
+    char instructionAsm[40] = {0};
 
 
     printf("%s\n","Type instruction:");
     scanf("%99[^\n]",instructionAsm); //Lidt specielt format af scanf her - den indlæser en hel linje i stedet for bare et ord
-    evalInstruction(instructionAsm,instructionBin);
+    //evalInstruction(instructionAsm,instructionBin);
     printf("Test af evalInstruction: %s\n",instructionBin);
 
-*/
 
-    secondPass();
+    //secondPass();
 
 
     return 0;
 }
-
-
-
 
 
 
@@ -130,7 +126,7 @@ void evalInstruction(char * assembly, char * binary){
     int labelFirst;
     labelFirst = hasLabel(instruction, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
 
-    char * tempInstruction;
+    char * tempInstruction; //TODO: skal den ikke assignes noget plads?
 
     if (labelFirst){ //remove the label, since it's not going to be used here (this function should be used in 2nd pass)
         strtok(instruction, " \t"); //make strtok remove the label
@@ -223,7 +219,6 @@ void firstPass(){
     //Symbol table should not be global/static/something, so it can be read from everywhere
 
 
-
     char inFileLocation[] = "C:\\Users\\peter\\Documents\\asm.txt"; //TODO har ikke kunne få det til at virke, hvor filerne ligger i projektroden
 
     //Initialize input stream
@@ -268,7 +263,6 @@ void secondPass(){
     }
 
 
-
     //Initialize output stream
     FILE* outStream;
     outStream = fopen(outFileLocation, "a"); //append mode
@@ -289,8 +283,6 @@ void secondPass(){
         //Clear binLine
         binLine[0]='\0';
     }
-
-
 
 
 
