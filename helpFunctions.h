@@ -239,6 +239,8 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
             case 'F':
                 strcat(tempOutput, "1111");
                 break;
+            case '\n'://Often '\n' is passed to this function in the end, and it should be ignored
+                break;
             default: //Activates only if no other case activated
                 printf("Input not hexadecimal.");
         }
@@ -248,9 +250,6 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
 
     //Call signExtend function to format the number correctly
     signExtendBinary(tempOutput,noOfBits,binary);
-
-
-
 }
 
 
@@ -327,7 +326,7 @@ int getOpcode(char * firstToken){
         return 17;
     } else if (strcmp(firstToken,".BLKW") == 0){
         return 18;
-    } else if (strcmp(firstToken,".SRINGZ") == 0){
+    } else if (strcmp(firstToken,".STRINGZ") == 0){
         return 19;
     } else if (strcmp(firstToken,".END") == 0){
         return 20;

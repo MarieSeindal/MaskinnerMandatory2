@@ -7,6 +7,10 @@
 void evalTest();
 void evalInstruction();
 void secondPass();
+#define maxInputLength 100 //maximal length of input from a file
+#define charsPrBinLine 17
+int binaryOutpuSize = maxInputLength*charsPrBinLine;
+
 
 int main() {
 /*
@@ -122,7 +126,7 @@ void evalInstruction(char * assembly, char * binary){
 
 
     //Converts all letters to uppercase
-    char instruction[30] = {0};
+    char instruction[maxInputLength] = {0};
     StrToUpper(assembly, instruction);
 
     //Checks if there is a label in front of the instruction/directive + gets opcode
@@ -139,7 +143,7 @@ void evalInstruction(char * assembly, char * binary){
     }
 
     //remove all spaces - they are now unnessecary
-    char withoutSpace[30] = {0};
+    char withoutSpace[maxInputLength] = {0};
     removeSpaces(instruction, withoutSpace);
 
 
@@ -202,10 +206,10 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
         case 18:
-
+            evalBLKW(withoutSpace,binary);
             break;
         case 19:
-
+            evalSTRINGZ(assembly,binary); //Needs the unprocessed asm string
             break;
         case 20:
 
@@ -254,7 +258,7 @@ void firstPass(){
 
 
 void secondPass(){
-    char inFileLocation[] = "asm.txt"; //Note - har ikke kunne få det til at virke, hvor filerne ligger i projektroden
+    char inFileLocation[] = "asm.txt";
     char outFileLocation[] = "bin.txt";
 
     //Initialize input stream
@@ -273,58 +277,34 @@ void secondPass(){
 
 
     //Arrays to hold each asm line and corresponding bin line
-    int bufferLength = 255; //won't be able to read any line longer than 255 chars
-    char asmLine[bufferLength];
-    char binLine[22] = {0};
-
+    char asmLine[maxInputLength];
+    char *binLine = (char*) malloc(binaryOutpuSize); //binaryOutputSize is a global variable that can be changed
+    if (binLine ==NULL){
+        printf("%s","Memory allocation failed.");
+    }
+    //by other functions if needed
+    binLine[0]='\0';
 
     //TODO det ville nok være bedre at bruge fscanf(), men kan ikke få den til at virke - Peter
-    while(fgets(asmLine, bufferLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
+    while(fgets(asmLine, maxInputLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
         evalInstruction(asmLine,binLine);               //Evaluate the instruction
         fprintf(outStream, "%s\n", binLine);    //Print/append to output file
 
         //Clear binLine
         binLine[0]='\0';
+
+        //If binaryOutputSize was changed -change it back
+        if (binaryOutpuSize != maxInputLength*charsPrBinLine){
+            binaryOutpuSize=maxInputLength*charsPrBinLine; //calculate default binaryOutputSize
+            realloc(binLine,binaryOutpuSize);               //reallocate with default size
+            if (binLine ==NULL){
+                printf("%s","Memory allocation failed.");
+            }
+        }
     }
 
-
-
+    free(binLine);
 }
-
-
-
-/*
- void evalInstruction(char * assembly, char * binary){
-    char withoutSpace[30] = {0};
-    removeSpaces(assembly, withoutSpace);
-    char Instruction[30] = {0};
-    StrToUpper(withoutSpace, Instruction);
-
-    if(strstr(Instruction, "ADD") != NULL) //chekker om instruktionen indeholder ADD
-    {
-        evalADD(Instruction, binary);
-
-    }else if(strstr(Instruction, "NOT") != NULL){
-        evalNOT(Instruction, binary);
-    }else if(strstr(Instruction, "LDR") != NULL){
-        evalLDR(Instruction, binary);
-    }else if(strstr(Instruction, "LD") != NULL){
-
-    }else if(strstr(Instruction, "ST") != NULL){
-        evalST(Instruction, binary);
-    }else if(strstr(Instruction, "BR") != NULL){
-
-    }else{//error
-    }
-}
- */
-
-
-
-
-
-
-
 
 
 
