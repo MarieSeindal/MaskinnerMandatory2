@@ -174,7 +174,7 @@ void evalAND(char * Instruction, char * binary) //takes an instruction in asm an
 
 }
 
-void evalBR(char * Instruction, char * binary)
+void evalBR(char * Instruction, char * binary) //TODO add logic for handling labels
 {
     //opcode to binary
     strcat(binary, "0000"); //appends opcode in binary to the output array
@@ -184,13 +184,13 @@ void evalBR(char * Instruction, char * binary)
     char * mnemonic = strtok(Instruction," \t");
 
     //Determine if it contains N, Z and P
-    int N = strstr(mnemonic,"N");
-    int Z = strstr(mnemonic,"Z");
-    int P = strstr(mnemonic,"P");
+    char * N = strstr(mnemonic,"N");
+    char * Z = strstr(mnemonic,"Z");
+    char * P = strstr(mnemonic,"P");
 
 
     //add corresponding bits (condition codes)
-    if (N){
+    if (N){ //If (N != NULL) - meaning if "N" was in the mnemonic
         strcat(binary,"1");
     } else{
         strcat(binary,"0");
@@ -208,7 +208,7 @@ void evalBR(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
-    char * imm = strtok(NULL,""); //Get the rest of the instruction string
+    char * imm = strtok(NULL," \t"); //Get the rest of the instruction string
     char immBin[10] = {0}; //imm9 + one bit for termination
     imm_offsetToBin(imm,9,immBin); //call method to convert offset to binary
     strcat(binary, immBin);

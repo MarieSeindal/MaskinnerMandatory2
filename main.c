@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include "instructions.h"
 
 
@@ -104,6 +105,21 @@ void evalInstruction(char * assembly, char * binary){
     //Input: assembly - a line of assembly code
     //Output: binary - the binary translation of the line of asm code
     //Ignores labels in front of instructions
+
+    //If the "instruction" is just whitespace
+    int isEmpty=0; //Assume, it IS just space, tab or newline etc.
+    int i =0;
+    while(assembly[i]!= '\0'){
+        if (isspace(assembly[i]) == 0){ //If it is something else than whitespace
+            isEmpty++; // indicate than something else has been seen
+        }
+        i++;
+    }
+    if (isEmpty == 0){ //If it was all whitespace
+        binary[0] = '\0'; //Set output to empty string
+        return;
+    }
+
 
     //Converts all letters to uppercase
     char instruction[30] = {0};
