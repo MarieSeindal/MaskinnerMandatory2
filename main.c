@@ -1,7 +1,20 @@
 #include <stdio.h>
 
 int main() {
-    char inFileLocation[] = "C:\\lc3\\asm.txt"; //TODO har ikke kunne få det til at virke, hvor filerne ligger i projektroden
+
+    FILE* outStream;
+    outStream = fopen("asm2.txt","w");
+    if(!outStream){
+        printf("%s", "Something is not working with writing to ouput file");
+    }
+
+    fprintf(outStream,"ADD SR1,SR2,SR3;\nADD SR2,SR1,SR1;");
+
+    fclose(outStream);
+
+
+
+   char inFileLocation[] = "asm2.txt";
 
     //Initialize input stream
     FILE* inStream;
@@ -21,15 +34,14 @@ int main() {
     printf("stoerrelsen paa filen %d\n",fileSize);
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
-    char currentString[17];
+    char currentString[50];
 
 
-    fgets(currentString, 17, inStream);
-    printf("string is: %s\n", currentString);
+    fgets(currentString, 50, inStream);
+    printf("string is: %s", currentString);
 
-
-    fgets(currentString, 17, inStream);
-    printf("string is: %s\n", currentString);
+    fgets(currentString, 50, inStream);
+    printf("string is: %s", currentString);
 
 
     return 0;
