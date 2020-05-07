@@ -95,8 +95,6 @@ int main() {
     printf("Test af evalInstruction: %s\n",instructionBin);
  */
 
-
-
     secondPass();
 
 

@@ -10,9 +10,6 @@
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 
-
-
-
 void removeSpaces(const char* withSpaces, char * withoutSpaces){
     int j=0;
     int i=0;
@@ -28,16 +25,16 @@ void removeSpaces(const char* withSpaces, char * withoutSpaces){
 
 }
 
-
 void signExtendBinary(char * binIn, int noOfBits, char *binOut)
-//input: char * binIn - a binary number
-//       int noOfBits - how many bits the output should be sign-extended to
-//Output: char * binOut - a correctly sign-exteded version of the input binary string
-//NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
-//      Also "works" with reverse "extension" e.g. removing some bits
-
 {
-    //Calculate size of hex-array in unorthodox way, since sizeof() doesn't work on dynamically allocated array
+    //input: char * binIn - a binary number
+    //       int noOfBits - how many bits the output should be sign-extended to
+    //Output: char * binOut - a correctly sign-extended version of the input binary string
+    //NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
+    //      Also "works" with reverse "extension" e.g. removing some bits
+
+
+    //Calculate size of hex-array in unorthodox way, since sizeof() doesn't work on these arrays
     int inputLength =0;
     while (binIn[inputLength] != '\0'){
         inputLength++;
@@ -57,23 +54,50 @@ void signExtendBinary(char * binIn, int noOfBits, char *binOut)
         }
 
     } else { //If it needs to be extended
-        char extension = binIn[0]; //First bit of input determines if extension is with 1 or 0
+        char extension = binIn[0]; //First bit of input determines if extension is with '1' or '0'
 
         //Output is extended to correct length
         int offset = noOfBits-inputLength;
-        for (int i = 0; i < offset; i++) { //All bits untill the offset are set to the extension
+        for (int i = 0; i < offset; i++) { //All bits until the offset are set to the extension
             binOut[i] = extension;
             binOut[i+1] = '\0'; //make sure, binOut has array terminator
         }
         //After the extension, input is appended to output
         strcat(binOut,binIn);
     }
-
-
 }
 
+void negateBinary(char * input, char * negation){
+    //Takes as input a 2's complement binary number and returns as output it's negation
+    //That is - returns the input * (-1) e.g. input=#5=101 ==> output =#-5 = 011
+    //NOTE: works just fine if input and output strings are the same
 
+    //Calculate length of input
+    int inputLength =0;
+    while (input[inputLength] != '\0'){
+        inputLength++;
+    }
 
+    //Variable to store if first 1 has been seen yet
+    int first1 = 0;
+
+    for (int i = inputLength-1; i >= 0 ; i--) {
+        if (input[i]=='0' && !first1){          //If we haven't encountered our first '1'
+            negation[i] = '0';                  //Keep it a '0'
+
+        } else if (input[i]=='1' && !first1){  //If we ARE encountering our first '1'
+            negation[i] = '1';                  //Keep it a '1'
+            first1 = 1;                         //Remember that first 1 has been found
+
+            //After the first '1' we flip bits
+        } else if (input[i]=='1' && first1){
+            negation[i] = '0';                  //Flip
+        } else if (input[i]=='0' && first1){
+            negation[i] = '1';                  //Flip
+        }
+    }
+    negation[inputLength]='\0'; //Terminate string
+}
 
 void StrToUpper(char * lowerCase, char * upperCase){
     int j = strlen(lowerCase);
@@ -89,73 +113,53 @@ void StrToUpper(char * lowerCase, char * upperCase){
     }
  }
 
+void DecimalToBinary(int n , int numOfBits, char*binary){
+    //Converts integer input to binary string in 2's complement
+    // n= decimal input, numOfBits = number of bits in output string, binary = output
+    //NOTE: Assumes that the caller has initialized binary array with at least numOfBits+1 chars (for termination)
+    //NOTE: Works for both signed and unsigned integers if enough bits are allocated, and number is positive
+    //      For negative numbers it obviously needs to have enough bits for 2's complement representation
 
-void DecimalToBinary2(int n , int noOfBits, char*bits){ // n= decimal
+
+    //Double check that output is terminated
+    binary[numOfBits]='\0';
+
 
     int numToBeDivided = n;
-    char bit[13]={0};
-    int count = 0;
+    int index = numOfBits - 1; //build number from least significant bit
+
+    //Check if n is negative
+    int negative =0;
+    if (n<0){
+        negative=1;
+        numToBeDivided =-n; //If negative, treat it as positive at first
+    }
 
 
     while (numToBeDivided >= 1) {
 
-        int quotient = numToBeDivided / 2; // resultatet af divisionen
-        int remainder = numToBeDivided % 2; //bit-værdien
+        int quotient = numToBeDivided / 2;      //Result from division
+        int remainder = numToBeDivided % 2;     //Remainder from division
 
         if (remainder == 0){
-            bit[count]=48;
+            binary[index]='0';
         } else{
-            bit[count]=49;
+            binary[index]='1';
         }
 
-        count++;
+        index--;
 
         numToBeDivided = quotient;
     }
 
-    //char flip[count+1];
-
-    int forCounter = count;
-    int count2=0;
-
-    // 13 .... antl bit =4
-
-    for (; forCounter >= 0; forCounter-- ){
-
-        bits[forCounter-1]=bit[count2];
-
-        count2++;
+    //Add any trailing 0's in front of number (+1 is because index has been decremented once too much)
+    for (int i = 0; i < index+1; i++) {
+        binary[i]='0';
     }
 
-    if (n == 0){
-        bits[0]=48;
+    if (negative){ //Negate if it was negative
+        negateBinary(binary,binary); //negation works fine with same input and output char
     }
-
-}
-
-
-
-void DecimalToBinary(int n, int noOfBits, char *bits)
-{
-    int c, d, count;                            //init tre ints
-
-    count = 0;
-
-    for (c = noOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
-                                                //antallet af bits er større end 0
-                                                 //og starter fra
-    {
-        d = n >> c;                             //bitwise right shift operator
-                                                 //is equal to n/(2^c)
-        if (d & 1)                              //mask operation, bitwise and operator
-                                                //it becomes true when the last bit is 1
-            *(bits+count) = 1 + '0';
-        else
-            *(bits+count) = 0 + '0';
-
-        count++;                                //counter
-    }
-    *(bits+count) = '\0';                       //
 
 }
 
@@ -163,30 +167,41 @@ void ConvRegToBin(char * Register, char * BinReg){
     Register++; //Deletes the R from Register, so it's just a number
     int RegisterInt = (int) Register[0] -48;
 
+    //DecimalToBinary is mostly for 2's complement integers. RegisterInt is unsigned, but still calculated correctly
+    //Read comments in DecimalToBinary for further description
     DecimalToBinary(RegisterInt,3,BinReg); //Always 3 bits in a register
 
 
 }
 
 void hexToBin(const char * hex, int noOfBits, char *binary)
-//input: char * hex - a string describing a number in the hexadecimal format
-//       int noOfBits - how many bits the output should be sign-extended to
-//Output: char * binary - a bit string in 2's complment format describing the same number as the input
-//NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
-{
+{   //input:    char * hex - a string describing a number in the hexadecimal format
+    //          int noOfBits - how many bits the output should be sign-extended to
+    //Output:   char * binary - a bit string in 2's complment format describing the same number as the input
+    //NOTE: obviously produces an error, if noOfBits is not chosen correctly, and if output char * binary is not allocated long enough
 
-    //Calculates length of input (in wierd way, since sizeOf() doesn't work for dynamically allocated arrays)
-    int inputHexLength =0;
-    while (hex[inputHexLength] != '\0'){
-        inputHexLength++;
-    }
 
-    //Allocate space for sub-result (correct number but not correct length)
-    char tempOutput[inputHexLength*4+1];
+    //Allocate array for sub-result
+    char tempOutput[noOfBits];
     tempOutput[0]='\0';
 
-    //Go through input and append corresponding binary values to tempOutPut
+
+
+    //Determine if input hex number is negative
+    int negative = 0;
+    if (hex[0]=='-'){           //If it is negative
+        hex++;                  //Delete the '-' to treat it as positive
+        negative =1;            //Remember that it was negative so we can negate in the end
+
+    }
+
+    //No matter if number was negative or positive, we treat it as positive for now (same mechanics as LC3-tools assembler)
+    strcat(tempOutput,"0"); //Add leading 0 so it is positive
+
+    //Initialize index variable
     int i =0;
+
+    //Go through input and append corresponding binary values to tempOutPut
     while (hex[i]!= '\0'){
 
         switch(hex[i])
@@ -247,11 +262,14 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
         i++;
     }
 
+    //If the number was negative to start with
+    if (negative){
+        negateBinary(tempOutput,tempOutput); //Negate the number - works fine with same input as output
+    }
 
-    //Call signExtend function to format the number correctly
+    //Call signExtend function to format the number correctly into output string
     signExtendBinary(tempOutput,noOfBits,binary);
 }
-
 
 void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
     if(imm_offset[0] == '#'){
@@ -268,11 +286,6 @@ void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
 
     }
 }
-
-
-
-
-
 
 int getOpcode(char * firstToken){
     //Input: firstToken - a string containing the first space-separated token of an instruction line
@@ -366,7 +379,31 @@ int hasLabel(char * asmLine, int * pOpcode){
 }
 
 
+/*
+ *void DecimalToBinary(int n, int noOfBits, char *bits)
+{
+    int c, d, count;                            //init tre ints
 
+    count = 0;
+
+    for (c = noOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
+                                                //antallet af bits er større end 0
+                                                 //og starter fra
+    {
+        d = n >> c;                             //bitwise right shift operator
+                                                 //is equal to n/(2^c)
+        if (d & 1)                              //mask operation, bitwise and operator
+                                                //it becomes true when the last bit is 1
+            *(bits+count) = 1 + '0';
+        else
+            *(bits+count) = 0 + '0';
+
+        count++;                                //counter
+    }
+    *(bits+count) = '\0';                       //
+
+}
+ */
 
 
 
