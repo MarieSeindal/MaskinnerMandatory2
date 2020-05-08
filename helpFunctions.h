@@ -6,6 +6,7 @@
 #define MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
 #include <string.h>
+#include <math.h>
 //#include "instructions.h"
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
 
@@ -382,32 +383,54 @@ int hasLabel(char * asmLine, int * pOpcode){
     }
 }
 
+int hexToInt(char * hexInput){
+    //Takes as input a char array containing a hex-number (without X) e.g. 1FA or -10
+    //Returns integer holding the decimal value of the input
 
-/*
- *void DecimalToBinary(int n, int noOfBits, char *bits)
-{
-    int c, d, count;                            //init tre ints
-
-    count = 0;
-
-    for (c = noOfBits-1 ; c >= 0 ; c--)        //et loop som itererer gennem så længe at
-                                                //antallet af bits er større end 0
-                                                 //og starter fra
-    {
-        d = n >> c;                             //bitwise right shift operator
-                                                 //is equal to n/(2^c)
-        if (d & 1)                              //mask operation, bitwise and operator
-                                                //it becomes true when the last bit is 1
-            *(bits+count) = 1 + '0';
-        else
-            *(bits+count) = 0 + '0';
-
-        count++;                                //counter
+    //Find out if hexInput is negative (can only be indicated by minus-sign)
+    int negative =0;
+    if (hexInput[0]=='-'){
+        //remember that it is negative
+        negative=1;
+        //remove the minus-sign
+        hexInput++;
     }
-    *(bits+count) = '\0';                       //
 
+    // Find the length of total number of hex digit
+    int len = strlen(hexInput);
+    len--;
+
+    //Initialize variables
+    int decimal =0; //The total decimal number
+    int val=0;      //Value of each character (0-15)
+
+    //Iterate over each hex digit
+    for(int i=0; hexInput[i]!='\0'; i++)
+    {
+
+        //Find the decimal representation of hex[i]
+        //If it is from 0 to 9
+        if(hexInput[i]>='0' && hexInput[i]<='9')
+        {
+            //Subtract 48 which is ASCII value of 0
+            val = hexInput[i] - 48;
+        }
+        //If it is from A to F
+        else if(hexInput[i]>='A' && hexInput[i]<='F')
+        {
+            //Subtract 65 which is ASCII value of A and add 10 so A->10, F->15 and so on
+            val = hexInput[i] - 65 + 10;
+        }
+
+        //Add to decimal number the value of the character times 16 to the power of index number (from right to left)
+        decimal += val * pow(16, len);
+        //Decrement index number
+        len--;
+    }
+    //return decimal value
+    return decimal;
 }
- */
+
 
 
 

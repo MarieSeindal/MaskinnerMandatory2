@@ -330,3 +330,36 @@ void evalBLKW(char * Instruction, char * binary)
         strcat(binary,"0000000000000000\n");
     }
 }
+
+int evalORIG(char * Instruction, char * binary)
+//Input: char array instruction containing a .ORIG asm-line
+//Output: char array binary containing binary representation of the address in the line (binary translation)
+//          also returns int holding decimal value of address
+
+{
+    //Deletes the ".ORIG"
+    Instruction+=5;
+
+    //Delete any extra whitespace (function might be called in firstPass() where whitespace hasn't been deleted)
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
+
+    //Make binary output
+    imm_offsetToBin(Instruction,16,binary);
+
+    //We want to return an int corresponding to the decimal value of the address - used in firstPass()
+    if(Instruction[0]=='#'){//If it is already decimal
+        //Remove the #
+        Instruction++;
+        //Return decimal value
+        return atoi(Instruction);
+    }else{ //If it is hexadecimal
+        //Remove the 'X'
+        Instruction++;
+        //Convert to decimal
+        return hexToInt(Instruction);
+    }
+
+}
