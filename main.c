@@ -174,12 +174,16 @@ void firstPass(){
 
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
         printf("%s", currentString);
-        LocationCounter++; //Increment location counter because line was read
 
         //Make currentString uppercase for easier processing
         StrToUpper(currentString,currentString);//Works fine with same input as output
 
         int containsLabel = hasLabel(currentString,&opcode); //See if line has label and get opcode
+
+        if (opcode != -1){ //If the line was recongnized (it could have been just whitespace)
+            LocationCounter++; //Increment location counter because line was read
+        }
+
 
         if (opcode == 16){//If it is .ORIG
             char binary[20]={0}; //Binary string is useless here, but parameter must be passed
