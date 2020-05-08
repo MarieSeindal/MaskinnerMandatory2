@@ -152,12 +152,12 @@ void firstPass(){
     if (!inStream) {                                //If it is not found
         printf("%s\n","Error - Input file not found.");
     }
-
+/*
     struct label{
         char name[10]; //Assume that labelnames are of max length 10
         int address; //TODO måske bør det ikke være en int, men en bitstreng
     };
-
+*/
 
     //Get size of file
     fseek(inStream, 0, SEEK_END);   // seek to end of file
@@ -165,12 +165,18 @@ void firstPass(){
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
     char currentString[50];
-
+    char label[10];
+    int * fakepointer;
 
     do{ //hvis den er true returnerer den 0
         fgets(currentString, 50, inStream);
         printf("string is: %s", currentString);
+        if(hasLabel(currentString,&fakepointer) == 1){
+            printf("jeg har fundet en label\n");
+            *label = strtok(currentString," ");
 
+
+        };
         LocationCounter++;
     }while (strcmp(currentString,".END") != 0);
 
