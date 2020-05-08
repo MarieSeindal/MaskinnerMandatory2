@@ -163,35 +163,40 @@ void firstPass(){
     }
 
 
-/*
-    struct label{
-        char name[10]; //Assume that labelnames are of max length 10
-        int address; //TODO måske bør det ikke være en int, men en bitstreng
-    };
-*/
-
     //Get size of file
     fseek(inStream, 0, SEEK_END);   // seek to end of file
     int fileSize = ftell(inStream);         // get current file pointer
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
+    ///////////////////////SYMBOLTABEL////////////////////////////////
+    //TODO: i henhold til LC er vi muligvis off by one
     char currentString[50];
-
     int * fakepointer;
     char* label;
+    char* firsttoken;
+    char * string;
 
     do{ //hvis den er true returnerer den 0
         fgets(currentString, 50, inStream);
-        printf("string is: %s", currentString);
+        printf("%s", currentString);
+        LocationCounter++;
         if(hasLabel(currentString,&fakepointer) == 1){
-           // printf("jeg har fundet en label\n");
-            //char * label = strtok(currentString," \t");
             label = strtok(currentString, " ");
             fprintf(outStream,"%s",label);
             fprintf(outStream,",%d\n",LocationCounter);
+        }
+        firsttoken = strtok(currentString," ");
+        int directive = getOpcode(firsttoken);
+            if(directive == 19){
+                string = strtok(NULL,"\n");
+                int stringlength = strlen(string)-2;
+                LocationCounter += stringlength;
+                fprintf(outStream,"%d",LocationCounter);
+            }else if( directive == 18){
+               // fprintf(outStream,"jeg fandt en blkw\n");
 
-        };
-        LocationCounter++;
+            }
+
     }while (strcmp(currentString,".END") != 0);
 
 

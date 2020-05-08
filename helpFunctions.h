@@ -312,7 +312,7 @@ int getOpcode(char * firstToken){
             || strcmp(firstToken,"BRPZNP")  == 0|| strcmp(firstToken,"BRZPN") == 0
             ){
         return 0;
-    } else if (strcmp(firstToken,"JMP") == 0 ||strcmp(firstToken,"RET") == 0){
+    } else if (strcmp(firstToken,"JMP") == 0 || strcmp(firstToken,"RET") == 0){
         return 12;
     } else if (strcmp(firstToken,"JSR") ==0 || strcmp(firstToken,"JSRR") == 0){
         return 5;
