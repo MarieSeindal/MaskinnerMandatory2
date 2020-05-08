@@ -10,7 +10,7 @@ void secondPass();
 void firstPass();
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
-
+int LocationCounter = 0;
 int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
 
 
@@ -143,9 +143,8 @@ void firstPass(){
     //TODO unfinished
     //In first pass, we read the asm file and create the symbol table.
     //Symbol table should not be global/static/something, so it can be read from everywhere
-    printf("nu er jeg i firstpass");
 
-    char inFileLocation[] = "asm.txt";
+    char inFileLocation[] = "asm2.txt";
 
     //Initialize input stream
     FILE* inStream;
@@ -159,18 +158,24 @@ void firstPass(){
         int address; //TODO måske bør det ikke være en int, men en bitstreng
     };
 
+
     //Get size of file
     fseek(inStream, 0, SEEK_END);   // seek to end of file
     int fileSize = ftell(inStream);         // get current file pointer
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
-    //NOTE: Symbol table could be made using dynamic data structure like linked list - that would be best TODO - make a linked list
-    //Much easier to use an array. Smallest possible avg. size of an asm-line is 5 chars=5 bytes e.g "BR x\n"
-    //So symboltable cannot be any longer that filesize/5 - even if all lines have labels
-    int maxSymbolTableSize = sizeof(struct label)*fileSize/5;
+    char currentString[50];
 
-    //TODO make a static symbol table, that can be used in 2nd pass also
 
+    do{ //hvis den er true returnerer den 0
+        fgets(currentString, 50, inStream);
+        printf("string is: %s", currentString);
+
+        LocationCounter++;
+    }while (strcmp(currentString,".END") != 0);
+
+
+    printf("\nAdressen af den sidste linje er: %d",LocationCounter);
 
 }
 
