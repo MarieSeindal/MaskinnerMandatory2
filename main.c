@@ -118,7 +118,7 @@ void evalInstruction(char * assembly, char * binary){
 
         //These are not real opcodes, but codes for the directives
         case 16:
-
+            evalORIG(withoutSpace,binary);
             break;
         case 17:
 
