@@ -9,7 +9,7 @@ void evalInstruction();
 void secondPass();
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
-int binaryOutpuSize = maxInputLength*charsPrBinLine;
+int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
 
 
 int main() {
@@ -283,7 +283,7 @@ void secondPass(){
     //by other functions if needed
     binLine[0]='\0';
 
-    //TODO det ville nok være bedre at bruge fscanf(), men kan ikke få den til at virke - Peter
+    // USes fgets() instead of fscanf() since it separated by \n and not whitespace
     while(fgets(asmLine, maxInputLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
         evalInstruction(asmLine,binLine);               //Evaluate the instruction
         fprintf(outStream, "%s\n", binLine);    //Print/append to output file
@@ -292,8 +292,8 @@ void secondPass(){
         binLine[0]='\0';
 
         //If binaryOutputSize was changed -change it back
-        if (binaryOutpuSize != maxInputLength*charsPrBinLine){
-            binaryOutpuSize=maxInputLength*charsPrBinLine; //calculate default binaryOutputSize
+        if (binaryOutpuSize != maxInputLength*charsPrBinLine*sizeof(char)){
+            binaryOutpuSize=maxInputLength*charsPrBinLine*sizeof(char); //calculate default binaryOutputSize
             realloc(binLine,binaryOutpuSize);               //reallocate with default size
             if (binLine ==NULL){
                 printf("%s","Memory allocation failed.");

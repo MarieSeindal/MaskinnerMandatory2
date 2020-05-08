@@ -182,10 +182,8 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
 
 
     //Allocate array for sub-result
-    char tempOutput[noOfBits];
+    char tempOutput[noOfBits+5]; //Tempoutput gets some extra bits to avoid overflow
     tempOutput[0]='\0';
-
-
 
     //Determine if input hex number is negative
     int negative = 0;
@@ -269,6 +267,12 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
 
     //Call signExtend function to format the number correctly into output string
     signExtendBinary(tempOutput,noOfBits,binary);
+    //signExtendBinary can cut off some bits if asked to do so.
+    // This only causes errors (unpredictable results), if the asm-instruction has syntax error
+    // e.g. if we calculate x1F in binary in 5 bits, we might expect 11111, but really it produces a syntax error (in LC3-tools at least)
+    //since x1F means +31 and +31 can't be represented as 2's comp with 5 bits.
+    //Correct way to get 11111 would be x-1
+
 }
 
 void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
