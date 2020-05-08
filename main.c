@@ -10,7 +10,7 @@ void secondPass();
 void firstPass();
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
-int LocationCounter = 0;
+int LocationCounter = 3000;
 int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
 
 
@@ -176,19 +176,20 @@ void firstPass(){
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
     char currentString[50];
-    char test[] = "HEjsa";
+
     int * fakepointer;
+    char* label;
 
     do{ //hvis den er true returnerer den 0
         fgets(currentString, 50, inStream);
         printf("string is: %s", currentString);
         if(hasLabel(currentString,&fakepointer) == 1){
-            printf("jeg har fundet en label\n");
-            fprintf(outStream, "jeg fandt en label\n");
+           // printf("jeg har fundet en label\n");
             //char * label = strtok(currentString," \t");
+            label = strtok(currentString, " ");
+            fprintf(outStream,"%s",label);
+            fprintf(outStream,",%d\n",LocationCounter);
 
-            fprintf(outStream,"%d\n",LocationCounter);
-            fprintf(outStream,"%s",test);
         };
         LocationCounter++;
     }while (strcmp(currentString,".END") != 0);
