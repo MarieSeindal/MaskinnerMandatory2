@@ -146,12 +146,23 @@ void firstPass(){
 
     char inFileLocation[] = "asm2.txt";
 
-    //Initialize input stream
+    ////////////////////////////Initialize input stream/////////////////////////
     FILE* inStream;
     inStream = fopen(inFileLocation, "r"); //Open file at file location in reading mode
     if (!inStream) {                                //If it is not found
         printf("%s\n","Error - Input file not found.");
     }
+
+
+    ////////////////////////OuputStream////////////////////////////////////////
+    FILE* outStream;
+    outStream = fopen("label.txt","w");
+    outStream = fopen("label.txt","a");
+    if(!outStream){
+        printf("%s", "Something is not working with writing to ouput file");
+    }
+
+
 /*
     struct label{
         char name[10]; //Assume that labelnames are of max length 10
@@ -165,7 +176,7 @@ void firstPass(){
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
     char currentString[50];
-    char label[10];
+    char test[] = "HEjsa";
     int * fakepointer;
 
     do{ //hvis den er true returnerer den 0
@@ -173,15 +184,20 @@ void firstPass(){
         printf("string is: %s", currentString);
         if(hasLabel(currentString,&fakepointer) == 1){
             printf("jeg har fundet en label\n");
-            *label = strtok(currentString," ");
+            fprintf(outStream, "jeg fandt en label\n");
+            //char * label = strtok(currentString," \t");
 
-
+            fprintf(outStream,"%d\n",LocationCounter);
+            fprintf(outStream,"%s",test);
         };
         LocationCounter++;
     }while (strcmp(currentString,".END") != 0);
 
 
     printf("\nAdressen af den sidste linje er: %d",LocationCounter);
+
+//////////////////////////closing ouputstream////////////////////////////
+    fclose(outStream);
 
 }
 
