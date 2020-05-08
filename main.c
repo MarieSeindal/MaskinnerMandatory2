@@ -4,13 +4,12 @@
 
 
 
-void evalTest();
 void evalInstruction();
 void secondPass();
 void firstPass();
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
-int LocationCounter = 3000;
+int LocationCounter = 0;
 int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
 
 
@@ -156,7 +155,6 @@ void firstPass(){
 
     ////////////////////////OuputStream////////////////////////////////////////
     FILE* outStream;
-    outStream = fopen("label.txt","w");
     outStream = fopen("label.txt","a");
     if(!outStream){
         printf("%s", "Something is not working with writing to ouput file");
@@ -168,36 +166,48 @@ void firstPass(){
     int fileSize = ftell(inStream);         // get current file pointer
     fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
 
-    ///////////////////////SYMBOLTABEL////////////////////////////////
-    //TODO: i henhold til LC er vi muligvis off by one
+    ///////////////////////SYMBOLTABLE////////////////////////////////
     char currentString[50];
-    int * fakepointer;
-    char* label;
-    char* firsttoken;
+    int opcode; //TODO BEMÆRK: Har kaldt den tidligere fakePointer for opcode, da det er hvad den er. (og fjernet *) -Peter
+    char label[30] = {0};
     char * string;
 
-    do{ //hvis den er true returnerer den 0
-        fgets(currentString, 50, inStream);
+    while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
         printf("%s", currentString);
-        LocationCounter++;
-        if(hasLabel(currentString,&fakepointer) == 1){
-            label = strtok(currentString, " ");
+        LocationCounter++; //Increment location counter because line was read
+
+        //Make currentString uppercase for easier processing
+        StrToUpper(currentString,currentString);//Works fine with same input as output
+
+        int containsLabel = hasLabel(currentString,&opcode); //See if line has label and get opcode
+
+        if (opcode == 16){//If it is .ORIG
+            char binary[20]={0}; //Binary string is useless here, but parameter must be passed
+            LocationCounter = evalORIG(currentString,binary); //Sets location counter
+            binary[0]='\0';
+
+        } else if (opcode ==20){ //If it is .END
+            break;                 //Break the while loop
+        }
+
+        if(containsLabel){ //If line has a label
+            strcpy(label,currentString); //make a copy of currentString so we don't cut it
+            strtok(label, " \t"); //Separate by space or tab to get label
             fprintf(outStream,"%s",label);
             fprintf(outStream,",%d\n",LocationCounter);
         }
-        firsttoken = strtok(currentString," ");
-        int directive = getOpcode(firsttoken);
-            if(directive == 19){
-                string = strtok(NULL,"\n");
-                int stringlength = strlen(string)-2;
-                LocationCounter += stringlength;
-                fprintf(outStream,"%d",LocationCounter);
-            }else if( directive == 18){
-               // fprintf(outStream,"jeg fandt en blkw\n");
 
-            }
+        if(opcode == 18){ //If it is .BLKW
+            // fprintf(outStream,"jeg fandt en blkw\n");
 
-    }while (strcmp(currentString,".END") != 0);
+        } else if(opcode == 19){ //If it is .STRINGZ
+            strtok(currentString,"\"");
+            string = strtok(NULL,"\"");
+            int stringlength = strlen(string);
+            LocationCounter += stringlength;  //Increment by excact length (+1 for termination, -1 because already incremented)
+        }
+
+    }
 
 
     printf("\nAdressen af den sidste linje er: %d",LocationCounter);

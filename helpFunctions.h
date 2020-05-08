@@ -101,6 +101,7 @@ void negateBinary(char * input, char * negation){
 }
 
 void StrToUpper(char * lowerCase, char * upperCase){
+    //Works fine if lowercase (input) is the same as UPPERCASE (output)
     int j = strlen(lowerCase);
 
     // int i = uppercase index
@@ -346,7 +347,7 @@ int getOpcode(char * firstToken){
         return 18;
     } else if (strcmp(firstToken,".STRINGZ") == 0){
         return 19;
-    } else if (strcmp(firstToken,".END") == 0){
+    } else if (strcmp(firstToken,".END") == 0 ||strcmp(firstToken,".END\n") == 0){
         return 20;
 
     } else { //If it was neither - return -1 to indicate that token was not an opcode
@@ -396,9 +397,8 @@ int hexToInt(char * hexInput){
         hexInput++;
     }
 
-    // Find the length of total number of hex digit
-    int len = strlen(hexInput);
-    len--;
+    // Find the length of total number of hex digit -1 for correct exponent power
+    int len = strlen(hexInput)-2;
 
     //Initialize variables
     int decimal =0; //The total decimal number
@@ -407,7 +407,6 @@ int hexToInt(char * hexInput){
     //Iterate over each hex digit
     for(int i=0; hexInput[i]!='\0'; i++)
     {
-
         //Find the decimal representation of hex[i]
         //If it is from 0 to 9
         if(hexInput[i]>='0' && hexInput[i]<='9')
