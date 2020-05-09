@@ -11,6 +11,7 @@
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
 extern int binaryOutpuSize;
+extern int ProgramCounter;
 
 
 void evalADD(char * Instruction, char * binary) //takes an instruction in asm and converts to binary
@@ -175,14 +176,15 @@ void evalAND(char * Instruction, char * binary) //takes an instruction in asm an
 
 }
 
-void evalBR(char * Instruction, char * binary) //TODO add logic for handling labels
+void evalBR(char * Instruction, char * binary)
 {
     //opcode to binary
     strcat(binary, "0000"); //appends opcode in binary to the output array
-    strcat(binary, " "); //For easier reading
+    strcat(binary, " "); //For easier reading NOTE: If this is deleted - update if-statements further down using indices
 
     //Get first SPACE-separated token to determine which type of BR-instuction it is
     char * mnemonic = strtok(Instruction," \t");
+    StrToUpper(mnemonic,mnemonic); //Convert the mnemonic part to uppercase
 
     //Determine if it contains N, Z and P
     char * N = strstr(mnemonic,"N");
@@ -206,13 +208,32 @@ void evalBR(char * Instruction, char * binary) //TODO add logic for handling lab
     } else{
         strcat(binary,"0");
     }
+    if (!(N||Z||P)){
+        //If they were all false -same as BRnzp
+        binary[5]=1;
+        binary[6]=1;
+        binary[7]=1;
+    }
 
     strcat(binary," ");//For readability
 
-    char * imm = strtok(NULL," \t"); //Get the rest of the instruction string
-    char immBin[10] = {0}; //imm9 + one bit for termination
-    imm_offsetToBin(imm,9,immBin); //call method to convert offset to binary
-    strcat(binary, immBin);
+    char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
+    argument = strtok(argument, "\n"); //Cut off any \n
+
+
+    //Check if it is a label on the symbol table
+    int labelAddress = getLabelAddress(argument);
+    char offsetBin[10] = {0}; //imm9 + one bit for termination
+
+    if (labelAddress == - 1){ //If no such label was found - it must be an offset
+        imm_offsetToBin(argument, 9, offsetBin); //call method to convert offset to binary
+
+    } else{ //If a label was found
+        calcBinaryOffset(argument, 9, offsetBin); //Use it to calculate binary offset
+    }
+
+    strcat(binary, offsetBin);//Append binary offset
+
 }
 
 void evalJMP(char * Instruction, char * binary) //TODO add logic for handling labels
@@ -222,7 +243,7 @@ void evalJMP(char * Instruction, char * binary) //TODO add logic for handling la
     strcat(binary, " "); //For easier reading
 
     //This function may be called both if it is JMP or RET - they have same opcode
-    //Both have 3 0's here
+    //Both have three 0's here
     strcat(binary, "000"); //appends opcode in binary to the output array
     strcat(binary, " "); //For easier reading
 
@@ -271,7 +292,7 @@ void evalLD(char * Instruction, char * binary) //TODO add logic for handling lab
 }
 
 
-void evalSTRINGZ(char * Instruction, char * binary)
+int evalSTRINGZ(char * Instruction, char * binary)
 {
     //Calculate size of array in unorthodox way, since sizeof() doesn't work
     int inputLength =0;
@@ -292,7 +313,7 @@ void evalSTRINGZ(char * Instruction, char * binary)
     char * stringz = strtok(NULL,"\"");
 
     //Converts the stringz-array to binary ascii values
-    int i =0;
+    int i =0; //i is the index for iterating over the string
     int decimalASCII;
     char binChar[charsPrBinLine]={0};
 
@@ -307,9 +328,13 @@ void evalSTRINGZ(char * Instruction, char * binary)
 
     //append binary array terminator
     strcat(binary,"0000000000000000\n");
+
+    // i now holds number of chars in string (not counting terminator)
+    //Returns i for use in PC update
+    return i+1;
 }
 
-void evalBLKW(char * Instruction, char * binary)
+int evalBLKW(char * Instruction, char * binary)
 {
     //Deletes the ".BLKW"
     Instruction+=5;
@@ -329,6 +354,8 @@ void evalBLKW(char * Instruction, char * binary)
     for (int i=0;i<size;i++){
         strcat(binary,"0000000000000000\n");
     }
+
+    return size; //returns number of lines the BLKW reserves - to update PC
 }
 
 int evalORIG(char * Instruction, char * binary)
@@ -346,8 +373,11 @@ int evalORIG(char * Instruction, char * binary)
         Instruction++;
     }
 
+    strtok(Instruction,"\n");//Terminates string at \n if there is one
+
     //Make binary output
     imm_offsetToBin(Instruction,16,binary);
+    binary[16]='\0'; //Double check that array is terminated correctly
 
     //We want to return an int corresponding to the decimal value of the address - used in firstPass()
     if(Instruction[0]=='#'){//If it is already decimal

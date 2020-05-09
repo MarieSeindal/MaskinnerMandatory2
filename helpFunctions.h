@@ -7,8 +7,8 @@
 
 #include <string.h>
 #include <math.h>
-//#include "instructions.h"
 #endif //MASKINNERMANDATORY2_HELPFUNCTIONS_H
+extern int ProgramCounter;
 
 
 void removeSpaces(const char* withSpaces, char * withoutSpaces){
@@ -388,6 +388,8 @@ int hexToInt(char * hexInput){
     //Takes as input a char array containing a hex-number (without X) e.g. 1FA or -10
     //Returns integer holding the decimal value of the input
 
+    strtok(hexInput,"\n"); //Terminate hexInput at newLine if there is one, so it doesn't mess up size
+
     //Find out if hexInput is negative (can only be indicated by minus-sign)
     int negative =0;
     if (hexInput[0]=='-'){
@@ -398,7 +400,7 @@ int hexToInt(char * hexInput){
     }
 
     // Find the length of total number of hex digit -1 for correct exponent power
-    int len = strlen(hexInput)-2;
+    int len = strlen(hexInput)-1;
 
     //Initialize variables
     int decimal =0; //The total decimal number
@@ -430,6 +432,42 @@ int hexToInt(char * hexInput){
     return decimal;
 }
 
+int getLabelAddress(const char * label){
+    //Searches label.txt file for specific label and returns address of label
+
+    char inFileLocation[] = "label.txt";
+
+    FILE* inStream;
+    inStream = fopen(inFileLocation, "r"); //Open file at file location in reading mode
+    if (!inStream) {                                //If it is not found
+        printf("%s\n","Error - Input file not found.");
+    }
+
+
+    char line[31]={0};
+    while (fgets(line, 30, inStream)){//While not EOF
+        strtok(line,",");
+        if (strcmp(label,line)==0){ //If label that we search for is equal to found label
+            char *addressString;
+            addressString = strtok(NULL,"\n"); //Get rest of string
+            int address = atoi(addressString); //Convert number to int
+            fclose(inStream); //close file
+            return address;
+        }
+    }
+
+    fclose(inStream);
+    return -1; //If not found - return -1
+
+
+}
+
+void calcBinaryOffset(char* label, int numOfBits, char * binaryOffset){
+    //Calculates the offset from PC to label and returns it in binary format in specified number of bits
+    int labelAddress = getLabelAddress(label);
+    int offset = labelAddress  - ProgramCounter ;
+    DecimalToBinary(offset,numOfBits,binaryOffset);
+}
 
 
 

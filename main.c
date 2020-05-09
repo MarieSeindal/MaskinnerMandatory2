@@ -10,12 +10,15 @@ void firstPass();
 #define maxInputLength 100 //maximal length of input from a file
 #define charsPrBinLine 17
 int LocationCounter = 0;
+int ProgramCounter =0;
 int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
 
 
 int main() {
-    //secondPass();
+
     firstPass();
+    secondPass();
+
 
     return 0;
 }
@@ -28,17 +31,20 @@ void evalInstruction(char * assembly, char * binary){
     //Ignores labels in front of instructions
 
     //If the "instruction" is just whitespace
-    int isEmpty=0; //Assume, it IS just space, tab or newline etc.
+    int notEmpty=0; //Assume, it IS just space, tab or newline etc.
     int i =0;
     while(assembly[i]!= '\0'){
         if (isspace(assembly[i]) == 0){ //If it is something else than whitespace
-            isEmpty++; // indicate than something else has been seen
+            notEmpty=1; // indicate than something else has been seen
+            break; //Break the while loop
         }
         i++;
     }
-    if (isEmpty == 0){ //If it was all whitespace
+    if (notEmpty == 0){ //If it was all whitespace
         binary[0] = '\0'; //Set output to empty string
         return;
+    } else{ //If it is something meaningful
+        ProgramCounter++; //Increments program counter
     }
 
 
@@ -51,9 +57,9 @@ void evalInstruction(char * assembly, char * binary){
     int labelFirst;
     labelFirst = hasLabel(instruction, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
 
-    char * tempInstruction = {0};
 
     if (labelFirst){ //remove the label, since it's not going to be used here (this function should be used in 2nd pass)
+        char * tempInstruction = {0};
         strtok(instruction, " \t"); //make strtok remove the label
         tempInstruction = strtok(NULL, ""); //strtok remembers rest of the string and puts it into tempInstruction, since delim is empty
         strcpy(instruction, tempInstruction); //copy the tempInstruction part into instruction
@@ -66,7 +72,7 @@ void evalInstruction(char * assembly, char * binary){
 
     switch (opcode){
         case 0:
-            evalBR(instruction, binary); //Specifically for BR it is important to have the spaces to evaluate
+            evalBR(assembly, binary); //Specifically for BR it is important to have the spaces to evaluate correctly
             //Therefore instruction is passed instead of withoutSpace
             break;
         case 1:
@@ -117,16 +123,19 @@ void evalInstruction(char * assembly, char * binary){
 
         //These are not real opcodes, but codes for the directives
         case 16:
-            evalORIG(withoutSpace,binary);
+            ProgramCounter = evalORIG(withoutSpace,binary)+1; //Sets ProgramCounter with call
+            //PC must point to next instruction, not current - hence the +1
             break;
         case 17:
 
             break;
         case 18:
-            evalBLKW(withoutSpace,binary);
+            ProgramCounter += evalBLKW(withoutSpace,binary)-1;
+            //Increments PC by number of EXTRA lines, that BLKW reserves (already counted that it reserved 1)
             break;
         case 19:
-            evalSTRINGZ(assembly,binary); //Needs the unprocessed asm string
+            ProgramCounter += evalSTRINGZ(assembly,binary)-1; //Needs the unprocessed asm string, so the string is untouched
+            //Updates PC with number of EXTRA lines, that STRINGZ reserves (already counted that it reserved 1)
             break;
         case 20:
 
@@ -143,7 +152,7 @@ void firstPass(){
     //In first pass, we read the asm file and create the symbol table.
     //Symbol table should not be global/static/something, so it can be read from everywhere
 
-    char inFileLocation[] = "asm2.txt";
+    char inFileLocation[] = "asm.txt";
 
     ////////////////////////////Initialize input stream/////////////////////////
     FILE* inStream;
@@ -168,6 +177,7 @@ void firstPass(){
 
     ///////////////////////SYMBOLTABLE////////////////////////////////
     char currentString[50];
+    char currentStringCopy[50];
     int opcode; //TODO BEMÆRK: Har kaldt den tidligere fakePointer for opcode, da det er hvad den er. (og fjernet *) -Peter
     char label[30] = {0};
     char * string;
@@ -175,10 +185,11 @@ void firstPass(){
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
         printf("%s", currentString);
 
-        //Make currentString uppercase for easier processing
-        StrToUpper(currentString,currentString);//Works fine with same input as output
+        //Make an uppercase copy of currentString for determining opcode
+        strcpy(currentStringCopy,currentString);
+        StrToUpper(currentStringCopy,currentStringCopy);//Works fine with same input as output
 
-        int containsLabel = hasLabel(currentString,&opcode); //See if line has label and get opcode
+        int containsLabel = hasLabel(currentStringCopy,&opcode); //See if line has label and get opcode
 
         if (opcode != -1){ //If the line was recongnized (it could have been just whitespace)
             LocationCounter++; //Increment location counter because line was read
@@ -186,6 +197,7 @@ void firstPass(){
 
 
         if (opcode == 16){//If it is .ORIG
+
             char binary[20]={0}; //Binary string is useless here, but parameter must be passed
             LocationCounter = evalORIG(currentString,binary); //Sets location counter
             binary[0]='\0';
@@ -214,8 +226,7 @@ void firstPass(){
     }
 
 
-    printf("\nAdressen af den sidste linje er: %d",LocationCounter);
-
+    printf("\nAdressen af den sidste linje er: %d\n",LocationCounter);
 //////////////////////////closing ouputstream////////////////////////////
     fclose(outStream);
 
@@ -252,6 +263,7 @@ void secondPass(){
 
     // USes fgets() instead of fscanf() since it separated by \n and not whitespace
     while(fgets(asmLine, maxInputLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
+
         evalInstruction(asmLine,binLine);               //Evaluate the instruction
         fprintf(outStream, "%s\n", binLine);    //Print/append to output file
 
