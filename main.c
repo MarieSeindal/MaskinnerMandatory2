@@ -102,10 +102,10 @@ void evalInstruction(char * assembly, char * binary){
             evalNOT(withoutSpace, binary);
             break;
         case 10:
-
+            evalLDI(assembly,binary);
             break;
         case 11:
-
+            evalSTI(assembly,binary);
             break;
         case 12:
             evalJMP(withoutSpace,binary);
@@ -114,7 +114,7 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
         case 14:
-
+            evalLEA(assembly,binary);
             break;
         case 15:
 
@@ -158,10 +158,10 @@ void firstPass(){
 
     ////////////////////////OuputStream////////////////////////////////////////
     FILE* outStream;
-    outStream = fopen("label.txt","w"); //this line makes sure that the file is empty before appending anything
-    fopen("label.txt","a"); //shifts to mode: appends
+    outStream = fopen("SymbolTable.txt","w"); //this line makes sure that the file is empty before appending anything
+    fopen("SymbolTable.txt","a"); //shifts to mode: appends
     if(!outStream){
-        printf("%s", "Something is not working with writing to ouput file");
+        printf("%s", "Something is not working with writing to output file");
     }
 
     ///////////////////////SYMBOLTABLE////////////////////////////////
@@ -184,7 +184,7 @@ void firstPass(){
             }
             i++;
         }
-        if (notEmpty != 0){ //If it's not just whitespace - proceed
+        if (notEmpty != 0){ //If it's not just whitespace - proceed. Skip otherwise
 
             //Make an uppercase copy of currentString for determining opcode
             strcpy(currentStringCopy,currentString);
@@ -232,10 +232,8 @@ void firstPass(){
         }
     }
 
-
 //////////////////////////closing ouputstream////////////////////////////
     fclose(outStream);
-
 }
 
 

@@ -21,9 +21,7 @@ void removeSpaces(const char* withSpaces, char * withoutSpaces){
         }
         i++; //increment withSpace index
     }
-    withoutSpaces[j+1]='\0'; //make sure, withoutSpaces ends correctly
-
-
+    withoutSpaces[j+1]='\0'; //make sure, withoutSpaces is terminated
 }
 
 void signExtendBinary(char * binIn, int noOfBits, char *binOut)
@@ -172,8 +170,6 @@ void ConvRegToBin(char * Register, char * BinReg){
     //DecimalToBinary is mostly for 2's complement integers. RegisterInt is unsigned, but still calculated correctly
     //Read comments in DecimalToBinary for further description
     DecimalToBinary(RegisterInt,3,BinReg); //Always 3 bits in a register
-
-
 }
 
 void hexToBin(const char * hex, int noOfBits, char *binary)
@@ -184,7 +180,7 @@ void hexToBin(const char * hex, int noOfBits, char *binary)
 
 
     //Allocate array for sub-result
-    char tempOutput[noOfBits+5]; //Tempoutput gets some extra bits to avoid overflow
+    char tempOutput[noOfBits+5]; //Tempoutput gets some extra space to avoid overflow
     tempOutput[0]='\0';
 
     //Determine if input hex number is negative
@@ -281,7 +277,7 @@ void imm_offsetToBin(char * imm_offset, int numOfBits, char * binOut){
     if(imm_offset[0] == '#'){
         imm_offset ++;  //increments pointer, resulting in 'removing' #
 
-        int imm_offsetInt = atoi(imm_offset); //casts or offset to an int
+        int imm_offsetInt = atoi(imm_offset); //converts imm or offset to an int
         DecimalToBinary(imm_offsetInt, numOfBits, binOut); //converts to binary
 
 
@@ -435,7 +431,7 @@ int hexToInt(char * hexInput){
 int getLabelAddress(const char * label){
     //Searches label.txt file for specific label and returns address of label
 
-    char inFileLocation[] = "label.txt";
+    char inFileLocation[] = "SymbolTable.txt";
 
     FILE* inStream;
     inStream = fopen(inFileLocation, "r"); //Open file at file location in reading mode
@@ -464,7 +460,7 @@ int getLabelAddress(const char * label){
 void calcBinaryOffset(char* label, int numOfBits, char * binaryOffset){
     //Calculates the offset from PC to label and returns it in binary format in specified number of bits
     int labelAddress = getLabelAddress(label);
-    int offset = labelAddress  - ProgramCounter ;
+    int offset = labelAddress - ProgramCounter ;
     DecimalToBinary(offset,numOfBits,binaryOffset);
 }
 

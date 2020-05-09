@@ -9,7 +9,7 @@
 #include "helpFunctions.h"
 #endif //MASKINNERMANDATORY2_INSTRUCTIONS_H
 #define maxInputLength 200
-#define charsPrBinLine 17
+#define charsPrBinLine 18
 extern int binaryOutpuSize;
 extern int ProgramCounter;
 
@@ -405,4 +405,115 @@ int evalORIG(char * Instruction, char * binary)
         return hexToInt(Instruction);
     }
 
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//FROM here on the functions are mostly copies of other functions with changed opcodes
+////////////////////////////////////////////////////////////////////////////////
+
+void evalLEA(char * Instruction, char * binary)
+{
+    //opcode to binary
+    strcat(binary,"1110");
+    strcat(binary," "); //formatting
+
+    strtok(Instruction," \t"); //Terminate at first whitespace to get rid of opcode mnemonic
+
+//FROM HERE ON IT IS COPIED FROM STORE, so DR is called SR
+
+    //Source Register
+    char * SR = strtok(NULL, ",");   //Get SR
+    char SRBin[4] = {0};
+    ConvRegToBin(SR, SRBin); //call a method to convert Register to binary
+    strcat(binary, SRBin);
+
+    strcat(binary," ");//For readability
+
+    //Label/offset9
+    char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
+    argument = strtok(argument, "\n"); //Cut off any \n
+
+    //Check if it is a label on the symbol table
+    int labelAddress = getLabelAddress(argument);
+    char offsetBin[10] = {0}; //offset9 + one bit for termination
+
+    if (labelAddress == - 1){ //If no such label was found - it must be an offset
+        imm_offsetToBin(argument, 9, offsetBin); //call method to convert offset to binary
+
+    } else{ //If a label was found
+        calcBinaryOffset(argument, 9, offsetBin); //Use it to calculate binary offset
+    }
+
+    strcat(binary, offsetBin);//Append binary offset
+}
+
+void evalLDI(char * Instruction, char * binary)
+{
+    //opcode to binary
+    strcat(binary,"1010");
+    strcat(binary," "); //formatting
+
+    strtok(Instruction," \t"); //Terminate at first whitespace to get rid of opcode mnemonic
+
+//FROM HERE ON IT IS COPIED FROM STORE, so DR is called SR
+
+    //Source Register
+    char * SR = strtok(NULL, ",");   //Get SR
+    char SRBin[4] = {0};
+    ConvRegToBin(SR, SRBin); //call a method to convert Register to binary
+    strcat(binary, SRBin);
+
+    strcat(binary," ");//For readability
+
+    //Label/offset9
+    char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
+    argument = strtok(argument, "\n"); //Cut off any \n
+
+    //Check if it is a label on the symbol table
+    int labelAddress = getLabelAddress(argument);
+    char offsetBin[10] = {0}; //offset9 + one bit for termination
+
+    if (labelAddress == - 1){ //If no such label was found - it must be an offset
+        imm_offsetToBin(argument, 9, offsetBin); //call method to convert offset to binary
+
+    } else{ //If a label was found
+        calcBinaryOffset(argument, 9, offsetBin); //Use it to calculate binary offset
+    }
+
+    strcat(binary, offsetBin);//Append binary offset
+}
+
+void evalSTI(char * Instruction, char * binary)
+{
+    //opcode to binary
+    strcat(binary,"1011");
+    strcat(binary," "); //formatting
+
+    strtok(Instruction," \t"); //Terminate at first whitespace to get rid of opcode mnemonic
+
+    //Source Register
+    char * SR = strtok(NULL, ",");   //Get SR
+    char SRBin[4] = {0};
+    ConvRegToBin(SR, SRBin); //call a method to convert Register to binary
+    strcat(binary, SRBin);
+
+    strcat(binary," ");//For readability
+
+    //Label/offset9
+    char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
+    argument = strtok(argument, "\n"); //Cut off any \n
+
+    //Check if it is a label on the symbol table
+    int labelAddress = getLabelAddress(argument);
+    char offsetBin[10] = {0}; //offset9 + one bit for termination
+
+    if (labelAddress == - 1){ //If no such label was found - it must be an offset
+        imm_offsetToBin(argument, 9, offsetBin); //call method to convert offset to binary
+
+    } else{ //If a label was found
+        calcBinaryOffset(argument, 9, offsetBin); //Use it to calculate binary offset
+    }
+
+    strcat(binary, offsetBin);//Append binary offset
 }
