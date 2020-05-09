@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "helpFunctions.h"
 #endif //MASKINNERMANDATORY2_INSTRUCTIONS_H
-#define maxInputLength 100 //maximal length of input from a file
+#define maxInputLength 200
 #define charsPrBinLine 17
 extern int binaryOutpuSize;
 extern int ProgramCounter;
@@ -318,19 +318,11 @@ void evalLD(char * Instruction, char * binary)
 
 int evalSTRINGZ(char * Instruction, char * binary)
 {
-    //Calculate size of array in unorthodox way, since sizeof() doesn't work
+    //Calculate size of array in unorthodox way, since sizeof() doesn't work here
     int inputLength =0;
     while (Instruction[inputLength] != '\0'){
         inputLength++;
     }
-
-    //Reallocate space for binary, since it might need more space for .STRINGZ
-    binaryOutpuSize = inputLength*charsPrBinLine; //reassign global variable binaryOutputSize
-    realloc(binary,binaryOutpuSize); //TODO vær opmærksom på denne linje - den har tidligere givet en fejl
-    if (binary ==NULL){
-        printf("%s","Memory allocation failed.");
-    }
-    binary[0]='\0';
 
     //Get the actual message - quotation-marks are not allowed in labels, so always works
     strtok(Instruction,"\"");
@@ -366,17 +358,14 @@ int evalBLKW(char * Instruction, char * binary)
     //Gets the number in the .BLKW directive
     int size = atoi(Instruction); //Get warning here, but if syntax is kept it's no problem
 
-    //Reallocate space for binary, since it might need more space for .STRINGZ
-    binaryOutpuSize = size*charsPrBinLine+1; //reassign global variable binaryOutputSize
-    realloc(binary,binaryOutpuSize); //TODO vær opmærksom på denne linje - den har tidligere givet en fejl
-    if (binary ==NULL){
-        printf("%s","Memory allocation failed.");
-    }
-    binary[0]='\0';
 
     //Appends empty space
-    for (int i=0;i<size;i++){
-        strcat(binary,"0000000000000000\n");
+    if (size<maxInputLength){ //If it is possible to output that many lines
+        for (int i=0;i<size;i++){
+            strcat(binary,"0000000000000000\n");
+        }
+    } else{
+        printf("%s\n",".BLKW asked to reserve too many lines.");
     }
 
     return size; //returns number of lines the BLKW reserves - to update PC

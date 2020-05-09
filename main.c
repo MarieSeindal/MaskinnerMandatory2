@@ -7,18 +7,17 @@
 void evalInstruction();
 void secondPass();
 void firstPass();
-#define maxInputLength 100 //maximal length of input from a file
-#define charsPrBinLine 17
+#define maxInputLength 200 //Can maximally read 200 characters pr line. This can be changed
+//Also upper bound for how many lines .BLKW can reserve
+#define charsPrBinLine 18
 int LocationCounter = 0;
 int ProgramCounter =0;
-int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char ); //TODO really only needs to be 16, maybe 20 as default but doesnt work rn
+int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char );
 
 
 int main() {
-
-    firstPass();
-    secondPass();
-
+    firstPass(); //Read asm.txt and create symbol table
+    secondPass(); //Evaulate all lines in asm.txt and append translations to bin.txt
 
     return 0;
 }
@@ -262,11 +261,7 @@ void secondPass(){
 
     //Arrays to hold each asm line and corresponding bin line
     char asmLine[maxInputLength];
-    char *binLine = (char*) malloc(binaryOutpuSize); //binaryOutputSize is a global variable that can be changed
-    if (binLine ==NULL){
-        printf("%s","Memory allocation failed.");
-    }
-    //by other functions if needed
+    char binLine[binaryOutpuSize];
     binLine[0]='\0';
 
     // USes fgets() instead of fscanf() since it separated by \n and not whitespace
@@ -277,18 +272,7 @@ void secondPass(){
 
         //Clear binLine
         binLine[0]='\0';
-
-        //If binaryOutputSize was changed -change it back
-        if (binaryOutpuSize != maxInputLength*charsPrBinLine*sizeof(char)){
-            binaryOutpuSize=maxInputLength*charsPrBinLine*sizeof(char); //calculate default binaryOutputSize
-            realloc(binLine,binaryOutpuSize);               //reallocate with default size
-            if (binLine ==NULL){
-                printf("%s","Memory allocation failed.");
-            }
-        }
     }
-
-    free(binLine);
 }
 
 
