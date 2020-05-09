@@ -304,7 +304,7 @@ int getOpcode(char * firstToken){
         return 1;
     } else if (strcmp(firstToken,"AND") == 0){
         return 5;
-    } else if (//branch can be written in a lot different ways TODO do this in a smarter way if possible
+    } else if (//branch can be written in a lot different ways
             strcmp(firstToken,"BR") == 0|| strcmp(firstToken,"BRN")  == 0|| strcmp(firstToken,"BRP")  == 0|| strcmp(firstToken,"BRZ")  == 0
             || strcmp(firstToken,"BRNZ")  == 0|| strcmp(firstToken,"BRNP")  == 0|| strcmp(firstToken,"BRPZ")  == 0|| strcmp(firstToken,"BRPN") == 0
             || strcmp(firstToken,"BRZN")  == 0|| strcmp(firstToken,"BRZP")  == 0

@@ -79,10 +79,10 @@ void evalInstruction(char * assembly, char * binary){
             evalADD(withoutSpace, binary);
             break;
         case 2:
-            evalLD(withoutSpace, binary);
+            evalLD(assembly, binary); //Needs unprocessed string for correct label
             break;
         case 3:
-            evalST(withoutSpace,binary);
+            evalST(assembly,binary); //Needs unprocessed string for correct label
             break;
         case 4:
 
@@ -179,7 +179,7 @@ void firstPass(){
     ///////////////////////SYMBOLTABLE////////////////////////////////
     char currentString[50];
     char currentStringCopy[50];
-    int opcode; //TODO BEMÆRK: Har kaldt den tidligere fakePointer for opcode, da det er hvad den er. (og fjernet *) -Peter
+    int opcode;
     char label[30] = {0};
     char * string;
 
