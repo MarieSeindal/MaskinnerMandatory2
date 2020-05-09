@@ -249,6 +249,7 @@ void secondPass(){
 
     //Initialize output stream
     FILE* outStream;
+    outStream = fopen(outFileLocation,"w"); //this line makes sure that the file is empty before appending anything
     outStream = fopen(outFileLocation, "a"); //append mode
     //If outfile is not found, it will create it.
 
