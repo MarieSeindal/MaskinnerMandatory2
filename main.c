@@ -141,18 +141,13 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
     }
-
-
-
 }
 
 
 void firstPass(){
-    //TODO unfinished
     //In first pass, we read the asm file and create the symbol table.
-    //Symbol table should not be global/static/something, so it can be read from everywhere
 
-    char inFileLocation[] = "asm2.txt";
+    char inFileLocation[] = "asm.txt";
 
     ////////////////////////////Initialize input stream/////////////////////////
     FILE* inStream;
@@ -170,12 +165,6 @@ void firstPass(){
         printf("%s", "Something is not working with writing to ouput file");
     }
 
-
-    //Get size of file
-    fseek(inStream, 0, SEEK_END);   // seek to end of file
-    int fileSize = ftell(inStream);         // get current file pointer
-    fseek(inStream, 0, SEEK_SET);   // seek back to beginning of file
-
     ///////////////////////SYMBOLTABLE////////////////////////////////
     char currentString[50];
     char currentStringCopy[50];
@@ -184,7 +173,7 @@ void firstPass(){
     char * string;
 
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
-        printf("%s", currentString);
+       // printf("%s", currentString);
 
         //If the "instruction" is just whitespace
         int notEmpty=0; //Assume, it IS just space, tab or newline etc.
@@ -245,7 +234,6 @@ void firstPass(){
     }
 
 
-    printf("\nAdressen af den sidste linje er: %d\n",LocationCounter);
 //////////////////////////closing ouputstream////////////////////////////
     fclose(outStream);
 
