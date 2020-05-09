@@ -164,7 +164,8 @@ void firstPass(){
 
     ////////////////////////OuputStream////////////////////////////////////////
     FILE* outStream;
-    outStream = fopen("label.txt","a");
+    outStream = fopen("label.txt","w"); //this line makes sure that the file is empty before appending anything
+    fopen("label.txt","a"); //shifts to mode: appends
     if(!outStream){
         printf("%s", "Something is not working with writing to ouput file");
     }
