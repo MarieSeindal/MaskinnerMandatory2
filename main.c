@@ -152,7 +152,7 @@ void firstPass(){
     //In first pass, we read the asm file and create the symbol table.
     //Symbol table should not be global/static/something, so it can be read from everywhere
 
-    char inFileLocation[] = "asm.txt";
+    char inFileLocation[] = "asm2.txt";
 
     ////////////////////////////Initialize input stream/////////////////////////
     FILE* inStream;
@@ -228,6 +228,12 @@ void firstPass(){
 
             if(opcode == 18){ //If it is .BLKW
                 // fprintf(outStream,"jeg fandt en blkw\n");
+                strtok(currentString,".");
+                string = strtok(NULL,"");
+                strtok(string," \t");
+                string = strtok(NULL," \t\n");
+                int number = atoi(string);
+                LocationCounter += number-1;
 
             } else if(opcode == 19){ //If it is .STRINGZ
                 strtok(currentString,"\"");
@@ -235,9 +241,7 @@ void firstPass(){
                 int stringlength = strlen(string);
                 LocationCounter += stringlength;  //Increment by excact length (+1 for termination, -1 because already incremented)
             }
-
         }
-
     }
 
 

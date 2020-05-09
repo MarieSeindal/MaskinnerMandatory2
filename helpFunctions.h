@@ -459,7 +459,6 @@ int getLabelAddress(const char * label){
     fclose(inStream);
     return -1; //If not found - return -1
 
-
 }
 
 void calcBinaryOffset(char* label, int numOfBits, char * binaryOffset){
