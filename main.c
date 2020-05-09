@@ -186,42 +186,56 @@ void firstPass(){
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
         printf("%s", currentString);
 
-        //Make an uppercase copy of currentString for determining opcode
-        strcpy(currentStringCopy,currentString);
-        StrToUpper(currentStringCopy,currentStringCopy);//Works fine with same input as output
-
-        int containsLabel = hasLabel(currentStringCopy,&opcode); //See if line has label and get opcode
-
-        if (opcode != -1){ //If the line was recongnized (it could have been just whitespace)
-            LocationCounter++; //Increment location counter because line was read
+        //If the "instruction" is just whitespace
+        int notEmpty=0; //Assume, it IS just space, tab or newline etc.
+        int i =0;
+        while(currentString[i]!= '\0'){
+            if (isspace(currentString[i]) == 0){ //If it is something else than whitespace
+                notEmpty=1; // indicate than something else has been seen
+                break; //Break the while loop
+            }
+            i++;
         }
+        if (notEmpty != 0){ //If it's not just whitespace - proceed
+
+            //Make an uppercase copy of currentString for determining opcode
+            strcpy(currentStringCopy,currentString);
+            StrToUpper(currentStringCopy,currentStringCopy);//Works fine with same input as output
+
+            int containsLabel = hasLabel(currentStringCopy,&opcode); //See if line has label and get opcode
+
+            if (opcode != -1){ //If the line was recongnized (it could have been just whitespace)
+                LocationCounter++; //Increment location counter because line was read
+            }
 
 
-        if (opcode == 16){//If it is .ORIG
+            if (opcode == 16){//If it is .ORIG
 
-            char binary[20]={0}; //Binary string is useless here, but parameter must be passed
-            LocationCounter = evalORIG(currentString,binary); //Sets location counter
-            binary[0]='\0';
+                char binary[20]={0}; //Binary string is useless here, but parameter must be passed
+                LocationCounter = evalORIG(currentString,binary); //Sets location counter
+                binary[0]='\0';
 
-        } else if (opcode ==20){ //If it is .END
-            break;                 //Break the while loop
-        }
+            } else if (opcode ==20){ //If it is .END
+                break;                 //Break the while loop
+            }
 
-        if(containsLabel){ //If line has a label
-            strcpy(label,currentString); //make a copy of currentString so we don't cut it
-            strtok(label, " \t"); //Separate by space or tab to get label
-            fprintf(outStream,"%s",label);
-            fprintf(outStream,",%d\n",LocationCounter);
-        }
+            if(containsLabel){ //If line has a label
+                strcpy(label,currentString); //make a copy of currentString so we don't cut it
+                strtok(label, " \t"); //Separate by space or tab to get label
+                fprintf(outStream,"%s",label);
+                fprintf(outStream,",%d\n",LocationCounter);
+            }
 
-        if(opcode == 18){ //If it is .BLKW
-            // fprintf(outStream,"jeg fandt en blkw\n");
+            if(opcode == 18){ //If it is .BLKW
+                // fprintf(outStream,"jeg fandt en blkw\n");
 
-        } else if(opcode == 19){ //If it is .STRINGZ
-            strtok(currentString,"\"");
-            string = strtok(NULL,"\"");
-            int stringlength = strlen(string);
-            LocationCounter += stringlength;  //Increment by excact length (+1 for termination, -1 because already incremented)
+            } else if(opcode == 19){ //If it is .STRINGZ
+                strtok(currentString,"\"");
+                string = strtok(NULL,"\"");
+                int stringlength = strlen(string);
+                LocationCounter += stringlength;  //Increment by excact length (+1 for termination, -1 because already incremented)
+            }
+
         }
 
     }
