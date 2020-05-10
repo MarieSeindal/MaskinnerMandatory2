@@ -124,6 +124,12 @@ void evalST(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
+    //Delete whitespace
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
+
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
     argument = strtok(argument, "\n"); //Cut off any \n
@@ -296,6 +302,12 @@ void evalLD(char * Instruction, char * binary)
     strcat(binary, DRBin);
 
     strcat(binary," ");//For readability
+
+    //Delete whitespace
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
@@ -495,6 +507,8 @@ void evalLEA(char * Instruction, char * binary)
 
     strtok(Instruction," \t"); //Terminate at first whitespace to get rid of opcode mnemonic
 
+
+
 //FROM HERE ON IT IS COPIED FROM STORE, so DR is called SR
 
     //Source Register
@@ -504,6 +518,12 @@ void evalLEA(char * Instruction, char * binary)
     strcat(binary, SRBin);
 
     strcat(binary," ");//For readability
+
+    //Delete whitespace
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
@@ -541,6 +561,12 @@ void evalLDI(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
+    //Delete whitespace
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
+
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
     argument = strtok(argument, "\n"); //Cut off any \n
@@ -574,6 +600,12 @@ void evalSTI(char * Instruction, char * binary)
     strcat(binary, SRBin);
 
     strcat(binary," ");//For readability
+
+    //Delete whitespace
+    int i =0;
+    while (isspace(Instruction[0])){
+        Instruction++;
+    }
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
