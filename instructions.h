@@ -519,15 +519,11 @@ void evalLEA(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
-    //Delete whitespace
-    int i =0;
-    while (isspace(Instruction[0])){
-        Instruction++;
-    }
+
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
-    argument = strtok(argument, "\n"); //Cut off any \n
+    argument = strtok(argument, " \t\n"); //Cut off any \n
 
     //Check if it is a label on the symbol table
     int labelAddress = getLabelAddress(argument);
@@ -561,11 +557,6 @@ void evalLDI(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
-    //Delete whitespace
-    int i =0;
-    while (isspace(Instruction[0])){
-        Instruction++;
-    }
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
@@ -601,11 +592,6 @@ void evalSTI(char * Instruction, char * binary)
 
     strcat(binary," ");//For readability
 
-    //Delete whitespace
-    int i =0;
-    while (isspace(Instruction[0])){
-        Instruction++;
-    }
 
     //Label/offset9
     char * argument = strtok(NULL, " \t"); //Get the rest of the instruction string
