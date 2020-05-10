@@ -31,11 +31,15 @@ void evalInstruction(char * asmInput, char * binary){
     //Output: binary - the binary translation of the line of asm code
     //Ignores labels in front of instructions
 
-    //If the "instruction" is just whitespace
+    //If the line is just whitespace
     int notEmpty=0; //Assume, it IS just space, tab or newline etc.
     int i =0;
     while(asmInput[i] != '\0'){
-        if (isspace(asmInput[i]) == 0){ //If it is something else than whitespace
+        if (asmInput[i]==';'){//If it is just whitespace and a comment
+            //Indicate that it is empty and break the loop
+            notEmpty=0;
+            break;
+        } else if (isspace(asmInput[i]) == 0){ //If it is something else than whitespace
             notEmpty=1; // indicate than something else has been seen
             break; //Break the while loop
         }
@@ -46,6 +50,9 @@ void evalInstruction(char * asmInput, char * binary){
         return;
     } else{ //If it is something meaningful
         ProgramCounter++; //Increments program counter
+
+        //Terminate at comment or newline now that we know, it won't make the string empty
+        strtok(asmInput,";\n");
     }
 
 
@@ -110,31 +117,31 @@ void evalInstruction(char * asmInput, char * binary){
             evalLDR(withoutSpace,binary);
             break;
         case 7:
-
+            evalSTR(withoutSpace,binary);
             break;
         case 8:
-
+            evalRTI(withoutSpace,binary);
             break;
         case 9:
             evalNOT(withoutSpace, binary);
             break;
         case 10:
-            evalLDI(asmNoLabel, binary);
+            evalLDI(asmNoLabel, binary);//Needs unprocessed string for correct label
             break;
         case 11:
-            evalSTI(asmNoLabel, binary);
+            evalSTI(asmNoLabel, binary);//Needs unprocessed string for correct label
             break;
         case 12:
             evalJMP(withoutSpace,binary);
             break;
         case 13:
-
+            //Illegal opcode 1101
             break;
         case 14:
-            evalLEA(asmNoLabel, binary);
+            evalLEA(asmNoLabel, binary);//Needs unprocessed string for correct label
             break;
         case 15:
-
+            evalTRAP(withoutSpace,binary);
             break;
 
         //These are not real opcodes, but codes for the directives
@@ -143,7 +150,7 @@ void evalInstruction(char * asmInput, char * binary){
             //PC must point to next instruction, not current - hence the +1
             break;
         case 17:
-
+            evalFILL(withoutSpace,binary);
             break;
         case 18:
             ProgramCounter += evalBLKW(withoutSpace,binary)-1;
@@ -154,7 +161,7 @@ void evalInstruction(char * asmInput, char * binary){
             //Updates PC with number of EXTRA lines, that STRINGZ reserves (already counted that it reserved 1)
             break;
         case 20:
-
+            //Has no translation
             break;
     }
 }
@@ -192,11 +199,16 @@ void firstPass(){
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
         currentStringPtr = currentString; //Make currentStringPtr point to front of currentString
 
+
         //Check if the "instruction" is just whitespace
         int notEmpty=0; //Assume, it IS just space, tab or newline etc.
         int i =0;
         while(currentString[i]!= '\0'){
-            if (isspace(currentString[i]) == 0){ //If it is something else than whitespace
+            if (currentString[i]==';'){//If it is just whitespace and a comment
+                //Indicate that it is empty and break the loop
+                notEmpty=0;
+                break;
+            } else if (isspace(currentString[i]) == 0){ //If it is something else than whitespace
                 notEmpty=1; // indicate than something else has been seen
                 break; //Break the while loop
             } else{
@@ -206,6 +218,9 @@ void firstPass(){
             i++;
         }
         if (notEmpty != 0){ //If it's not just whitespace - proceed. Skip otherwise
+
+            //Delete comment and newline
+            strtok(currentStringPtr,";\n");
 
             //Make an uppercase copy of currentString for determining opcode
             strcpy(currentStringCopy,currentStringPtr);

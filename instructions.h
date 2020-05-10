@@ -411,6 +411,54 @@ int evalORIG(char * Instruction, char * binary)
 
 }
 
+void evalJSR(char * Instruction, char * binary)
+{
+    //opcode to binary
+    strcat(binary,"0100");
+    strcat(binary," "); //formatting
+
+    //Determine if JSR og JSRR (labels and whitespace has been removed in front, so this works)
+    char * mnemoic = strtok(Instruction," \t");
+
+    if (mnemoic[3]=='R'){ //If JSRR
+        strcat(binary,"0 00 ");
+
+        char * BR = strtok(NULL, " \t\n"); //Get the rest of the instruction string
+        char SRBin[4] = {0};
+        ConvRegToBin(BR, SRBin); //call a method to convert Register to binary
+        strcat(binary, SRBin);
+
+        //Append zeros
+        strcat(binary," 000000");
+
+    } else{ //If JSR (Instruction[3] = ' ')
+        strcat(binary,"1");
+        strcat(binary," "); //formatting
+
+        //Label/offset11
+        char * argument = strtok(NULL, " \t\n"); //Get the rest of the instruction string
+
+        //Check if it is a label on the symbol table
+        int labelAddress = getLabelAddress(argument);
+        char offsetBin[12] = {0}; //offset11 + one bit for termination
+
+        if (labelAddress == - 1){ //If no such label was found - it must be an offset
+            imm_offsetToBin(argument, 11, offsetBin); //call method to convert offset to binary
+
+        } else{ //If a label was found
+            calcBinaryOffset(argument, 11, offsetBin); //Use it to calculate binary offset
+        }
+
+        strcat(binary, offsetBin);//Append binary offset
+    }
+
+
+}
+
+void evalRTI(char * Instruction, char * binary)
+{
+    strcat(binary,"1000 000000000000");
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //FROM here on the functions are mostly copies of other functions with changed opcodes
@@ -522,46 +570,56 @@ void evalSTI(char * Instruction, char * binary)
     strcat(binary, offsetBin);//Append binary offset
 }
 
-void evalJSR(char * Instruction, char * binary)
+void evalSTR(char * Instruction, char * binary)
 {
     //opcode to binary
-    strcat(binary,"0100");
-    strcat(binary," "); //formatting
+    strcat(binary, "0111"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+    Instruction += 3; //instruction-pointeren incrementes med 3 (svarer lidt til at slette de første 3 bogstaver ADD)
 
-    //Determine if JSR og JSRR (labels and whitespace has been removed in front, so this works)
-    char * mnemoic = strtok(Instruction," \t");
 
-    if (mnemoic[3]=='R'){ //If JSRR
-        strcat(binary,"0 00 ");
+    //First register
+    char * DR = strtok(Instruction,",");
+    char DRBin[4] = {0};
+    ConvRegToBin(DR,DRBin); //call a method to convert Register to binary
+    strcat(binary, DRBin);
+    strcat(binary, " "); //For easier reading
 
-        char * BR = strtok(NULL, " \t\n"); //Get the rest of the instruction string
-        char SRBin[4] = {0};
-        ConvRegToBin(BR, SRBin); //call a method to convert Register to binary
-        strcat(binary, SRBin);
+    //Second register
+    char * SR1 = strtok(NULL,",");
+    char SR1Bin[4] = {0};
+    ConvRegToBin(SR1,SR1Bin); //call a method to convert Register to binary
+    strcat(binary, SR1Bin);
+    strcat(binary, " "); //For easier reading
 
-        //Append zeros
-        strcat(binary," 000000");
-
-    } else{ //If JSR (Instruction[3] = ' ')
-        strcat(binary,"1");
-        strcat(binary," "); //formatting
-
-        //Label/offset11
-        char * argument = strtok(NULL, " \t\n"); //Get the rest of the instruction string
-
-        //Check if it is a label on the symbol table
-        int labelAddress = getLabelAddress(argument);
-        char offsetBin[12] = {0}; //offset11 + one bit for termination
-
-        if (labelAddress == - 1){ //If no such label was found - it must be an offset
-            imm_offsetToBin(argument, 11, offsetBin); //call method to convert offset to binary
-
-        } else{ //If a label was found
-            calcBinaryOffset(argument, 11, offsetBin); //Use it to calculate binary offset
-        }
-
-        strcat(binary, offsetBin);//Append binary offset
-    }
-
+    //Offset6
+    char * offset6 = strtok(NULL, ",");
+    char offsetBin[7] = {0};
+    imm_offsetToBin(offset6,6,offsetBin); //call method to convert offset to binary
+    strcat(binary, offsetBin);
 
 }
+
+void evalTRAP(char * Instruction, char * binary){
+    //opcode to binary
+    strcat(binary, "1111"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+
+    //Delete TRAP
+    Instruction+=4;
+
+    strcat(binary, "0000"); //appends 4 zeros
+    strcat(binary, " "); //For easier reading
+
+    char trapvect[9]={0};
+    imm_offsetToBin(Instruction,8,trapvect);
+    strcat(binary,trapvect);
+}
+
+void evalFILL(char * Instruction, char * binary){
+
+    char number[17]={0};
+    imm_offsetToBin(Instruction,16,number);
+    strcat(binary,number);
+}
+
