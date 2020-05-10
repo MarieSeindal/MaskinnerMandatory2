@@ -386,7 +386,7 @@ int evalORIG(char * Instruction, char * binary)
         Instruction++;
     }
 
-    strtok(Instruction,"\n");//Terminates string at \n if there is one
+    strtok(Instruction," \t\n");//Terminates string at first wihtespace if there is any
 
     //Make binary output
     imm_offsetToBin(Instruction,16,binary);
