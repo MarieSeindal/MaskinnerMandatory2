@@ -460,6 +460,29 @@ void evalRTI(char * Instruction, char * binary)
     strcat(binary,"1000 000000000000");
 }
 
+void evalTRAP(char * Instruction, char * binary){
+    //opcode to binary
+    strcat(binary, "1111"); //appends opcode in binary to the output array
+    strcat(binary, " "); //For easier reading
+
+    //Delete TRAP
+    Instruction+=4;
+
+    strcat(binary, "0000"); //appends 4 zeros
+    strcat(binary, " "); //For easier reading
+
+    char trapvect[9]={0};
+    imm_offsetToBin(Instruction,8,trapvect);
+    strcat(binary,trapvect);
+}
+
+void evalFILL(char * Instruction, char * binary){
+
+    char number[17]={0};
+    imm_offsetToBin(Instruction,16,number);
+    strcat(binary,number);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //FROM here on the functions are mostly copies of other functions with changed opcodes
 ////////////////////////////////////////////////////////////////////////////////
@@ -600,26 +623,5 @@ void evalSTR(char * Instruction, char * binary)
 
 }
 
-void evalTRAP(char * Instruction, char * binary){
-    //opcode to binary
-    strcat(binary, "1111"); //appends opcode in binary to the output array
-    strcat(binary, " "); //For easier reading
 
-    //Delete TRAP
-    Instruction+=4;
-
-    strcat(binary, "0000"); //appends 4 zeros
-    strcat(binary, " "); //For easier reading
-
-    char trapvect[9]={0};
-    imm_offsetToBin(Instruction,8,trapvect);
-    strcat(binary,trapvect);
-}
-
-void evalFILL(char * Instruction, char * binary){
-
-    char number[17]={0};
-    imm_offsetToBin(Instruction,16,number);
-    strcat(binary,number);
-}
 
