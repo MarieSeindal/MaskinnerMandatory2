@@ -312,7 +312,7 @@ int getOpcode(char * firstToken){
     } else if (strcmp(firstToken,"JMP") == 0 || strcmp(firstToken,"RET") == 0){
         return 12;
     } else if (strcmp(firstToken,"JSR") ==0 || strcmp(firstToken,"JSRR") == 0){
-        return 5;
+        return 4;
     } else if (strcmp(firstToken,"LD") == 0){
         return 2;
     } else if (strcmp(firstToken,"LDI") == 0){

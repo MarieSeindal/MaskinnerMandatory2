@@ -10,12 +10,14 @@ void firstPass();
 #define maxInputLength 200 //Can maximally read 200 characters pr line. This can be changed
 //Also upper bound for how many lines .BLKW can reserve
 #define charsPrBinLine 18
+#define maxLabelSize 30
 int LocationCounter = 0;
 int ProgramCounter =0;
 int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char );
 
 
 int main() {
+
     firstPass(); //Read asm.txt and create symbol table
     secondPass(); //Evaulate all lines in asm.txt and append translations to bin.txt
 
@@ -24,16 +26,16 @@ int main() {
 
 
 
-void evalInstruction(char * assembly, char * binary){
-    //Input: assembly - a line of assembly code
+void evalInstruction(char * asmInput, char * binary){
+    //Input: asmInput - a line of assembly code
     //Output: binary - the binary translation of the line of asm code
     //Ignores labels in front of instructions
 
     //If the "instruction" is just whitespace
     int notEmpty=0; //Assume, it IS just space, tab or newline etc.
     int i =0;
-    while(assembly[i]!= '\0'){
-        if (isspace(assembly[i]) == 0){ //If it is something else than whitespace
+    while(asmInput[i] != '\0'){
+        if (isspace(asmInput[i]) == 0){ //If it is something else than whitespace
             notEmpty=1; // indicate than something else has been seen
             break; //Break the while loop
         }
@@ -47,44 +49,59 @@ void evalInstruction(char * assembly, char * binary){
     }
 
 
-    //Converts all letters to uppercase
-    char instruction[maxInputLength] = {0};
-    StrToUpper(assembly, instruction);
+    //For most functions, it's easier to process the instruction/directive if no spaces and all uppercase
+    char asmProcessed[maxInputLength] = {0};
+    StrToUpper(asmInput, asmProcessed); //Convert it to uppercase to determine opcode
+
+    //For some functions, we need the original format (e.g. for correct labels) but without labels in FRONT
+    char asmNoLabel[maxInputLength]; //This will be asmNoLabel
+    strcpy(asmNoLabel, asmInput);
 
     //Checks if there is a label in front of the instruction/directive + gets opcode
     int opcode;
     int labelFirst;
-    labelFirst = hasLabel(instruction, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
+    labelFirst = hasLabel(asmProcessed, &opcode); //Gives hasLabel pointer to opcode, so this can be determined in same call
 
+    //We now know the opcode, and know if it has a label first
+    //Time to remove labels, if there is one
 
-    if (labelFirst){ //remove the label, since it's not going to be used here (this function should be used in 2nd pass)
-        char * tempInstruction = {0};
-        strtok(instruction, " \t"); //make strtok remove the label
-        tempInstruction = strtok(NULL, ""); //strtok remembers rest of the string and puts it into tempInstruction, since delim is empty
-        strcpy(instruction, tempInstruction); //copy the tempInstruction part into instruction
+    if (labelFirst){ //remove the label, since it's not going to be used here
+        char * tempInstruction; //Pointer for editing strings
+        
+        strtok(asmProcessed, " \t"); //make strtok remove the label
+        tempInstruction = strtok(NULL, ""); //strtok remembers rest of the string and points tempInstruction there
+        strcpy(asmProcessed, tempInstruction); //copy the tempInstruction part into asmProcessed
+
+        //In many cases, we want the unprocessed string (asmNoLabel) without labels - so repeat
+        strtok(asmNoLabel, " \t"); //make strtok remove the label
+        tempInstruction = strtok(NULL, ""); //get pointer to first char after label
+        strcpy(asmNoLabel,tempInstruction); //copy the tempInstruction part into asmNoLabel
     }
 
-    //remove all spaces - they are now unnessecary
+    //remove all spaces - they are now unnessecary (only for the processed one)
     char withoutSpace[maxInputLength] = {0};
-    removeSpaces(instruction, withoutSpace);
+    removeSpaces(asmProcessed, withoutSpace);
 
+    
+    //Now we have 2 inputs that can be used: asmNoLabel which is just the original input without label in front
+    //                                      withoutSpace which is both uppercase, without space and without label
 
     switch (opcode){
         case 0:
-            evalBR(assembly, binary); //Specifically for BR it is important to have the spaces to evaluate correctly
+            evalBR(asmNoLabel, binary); //Specifically for BR it is important to have the spaces to evaluate correctly
             //Therefore instruction is passed instead of withoutSpace
             break;
         case 1:
             evalADD(withoutSpace, binary);
             break;
         case 2:
-            evalLD(assembly, binary); //Needs unprocessed string for correct label
+            evalLD(asmNoLabel, binary); //Needs unprocessed string for correct label
             break;
         case 3:
-            evalST(assembly,binary); //Needs unprocessed string for correct label
+            evalST(asmNoLabel, binary); //Needs unprocessed string for correct label
             break;
         case 4:
-
+            evalJSR(asmNoLabel, binary); //Needs unprocessed string for correct label
             break;
         case 5:
             evalAND(withoutSpace,binary);
@@ -102,10 +119,10 @@ void evalInstruction(char * assembly, char * binary){
             evalNOT(withoutSpace, binary);
             break;
         case 10:
-            evalLDI(assembly,binary);
+            evalLDI(asmNoLabel, binary);
             break;
         case 11:
-            evalSTI(assembly,binary);
+            evalSTI(asmNoLabel, binary);
             break;
         case 12:
             evalJMP(withoutSpace,binary);
@@ -114,7 +131,7 @@ void evalInstruction(char * assembly, char * binary){
 
             break;
         case 14:
-            evalLEA(assembly,binary);
+            evalLEA(asmNoLabel, binary);
             break;
         case 15:
 
@@ -133,7 +150,7 @@ void evalInstruction(char * assembly, char * binary){
             //Increments PC by number of EXTRA lines, that BLKW reserves (already counted that it reserved 1)
             break;
         case 19:
-            ProgramCounter += evalSTRINGZ(assembly,binary)-1; //Needs the unprocessed asm string, so the string is untouched
+            ProgramCounter += evalSTRINGZ(asmNoLabel, binary) - 1; //Needs the unprocessed asm string, so the string is untouched
             //Updates PC with number of EXTRA lines, that STRINGZ reserves (already counted that it reserved 1)
             break;
         case 20:
@@ -165,29 +182,33 @@ void firstPass(){
     }
 
     ///////////////////////SYMBOLTABLE////////////////////////////////
-    char currentString[50];
-    char currentStringCopy[50];
+    char currentString[maxInputLength];
+    char * currentStringPtr = currentString; //Pointer to first non-whitespace character of currentString
+    char currentStringCopy[maxInputLength];
     int opcode;
-    char label[30] = {0};
+    char label[maxLabelSize] = {0};
     char * string;
 
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
-       // printf("%s", currentString);
+        currentStringPtr = currentString; //Make currentStringPtr point to front of currentString
 
-        //If the "instruction" is just whitespace
+        //Check if the "instruction" is just whitespace
         int notEmpty=0; //Assume, it IS just space, tab or newline etc.
         int i =0;
         while(currentString[i]!= '\0'){
             if (isspace(currentString[i]) == 0){ //If it is something else than whitespace
                 notEmpty=1; // indicate than something else has been seen
                 break; //Break the while loop
+            } else{
+                //If it is just space in the front make pointer ignore it
+                currentStringPtr++;
             }
             i++;
         }
         if (notEmpty != 0){ //If it's not just whitespace - proceed. Skip otherwise
 
             //Make an uppercase copy of currentString for determining opcode
-            strcpy(currentStringCopy,currentString);
+            strcpy(currentStringCopy,currentStringPtr);
             StrToUpper(currentStringCopy,currentStringCopy);//Works fine with same input as output
 
             int containsLabel = hasLabel(currentStringCopy,&opcode); //See if line has label and get opcode
@@ -200,7 +221,7 @@ void firstPass(){
             if (opcode == 16){//If it is .ORIG
 
                 char binary[20]={0}; //Binary string is useless here, but parameter must be passed
-                LocationCounter = evalORIG(currentString,binary); //Sets location counter
+                LocationCounter = evalORIG(currentStringPtr,binary); //Sets location counter
                 binary[0]='\0';
 
             } else if (opcode ==20){ //If it is .END
@@ -208,15 +229,14 @@ void firstPass(){
             }
 
             if(containsLabel){ //If line has a label
-                strcpy(label,currentString); //make a copy of currentString so we don't cut it
+                strcpy(label,currentStringPtr); //make a copy of currentString so we don't cut it
                 strtok(label, " \t"); //Separate by space or tab to get label
                 fprintf(outStream,"%s",label);
                 fprintf(outStream,",%d\n",LocationCounter);
             }
 
             if(opcode == 18){ //If it is .BLKW
-                // fprintf(outStream,"jeg fandt en blkw\n");
-                strtok(currentString,".");
+                strtok(currentStringPtr,".");
                 string = strtok(NULL,"");
                 strtok(string," \t");
                 string = strtok(NULL," \t\n");
@@ -224,7 +244,7 @@ void firstPass(){
                 LocationCounter += number-1;
 
             } else if(opcode == 19){ //If it is .STRINGZ
-                strtok(currentString,"\"");
+                strtok(currentStringPtr,"\"");
                 string = strtok(NULL,"\"");
                 int stringlength = strlen(string);
                 LocationCounter += stringlength;  //Increment by excact length (+1 for termination, -1 because already incremented)
