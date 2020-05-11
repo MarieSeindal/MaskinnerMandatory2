@@ -164,6 +164,11 @@ void DecimalToBinary(int n , int numOfBits, char*binary){
 }
 
 void ConvRegToBin(char * Register, char * BinReg){
+    //Deletes any leading whitespace
+    while(isspace(Register[0])){
+        Register++;
+    }
+
     Register++; //Deletes the R from Register, so it's just a number
     int RegisterInt = (int) Register[0] -48;
 
