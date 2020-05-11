@@ -314,8 +314,6 @@ void secondPass(){
 
 
 void unitTests(){
-    //Initialize test output string
-    char binaryOutput[20]= {0};
 
     //Test af hexToInt
     char T1Input[] = "BEEF";
