@@ -489,6 +489,8 @@ void evalTRAP(char * Instruction, char * binary){
 }
 
 void evalFILL(char * Instruction, char * binary){
+    //Delete .FILL
+    Instruction+=5;
 
     char number[17]={0};
     imm_offsetToBin(Instruction,16,number);

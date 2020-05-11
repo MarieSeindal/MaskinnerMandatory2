@@ -301,7 +301,10 @@ void secondPass(){
     while(fgets(asmLine, maxInputLength, inStream)) {     //While fgets() is actually getting something //TODO could also be while it's not getting .END
 
         evalInstruction(asmLine,binLine);               //Evaluate the instruction
-        fprintf(outStream, "%s\n", binLine);    //Print/append to output file
+        if (binLine[0]!='\0'){ //Don't print it if it's empty
+            fprintf(outStream, "%s\n", binLine);    //Print/append to output file
+        }
+
 
         //Clear binLine
         binLine[0]='\0';
