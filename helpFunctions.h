@@ -429,6 +429,11 @@ int hexToInt(char * hexInput){
         //Decrement index number
         len--;
     }
+    //Make number negative, if needed
+    if(negative){
+        decimal= decimal*(-1);
+    }
+
     //return decimal value
     return decimal;
 }

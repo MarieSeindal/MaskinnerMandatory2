@@ -3,7 +3,7 @@
 #include "instructions.h"
 
 
-
+void unitTests();
 void evalInstruction();
 void secondPass();
 void firstPass();
@@ -17,6 +17,7 @@ int binaryOutpuSize = maxInputLength*charsPrBinLine*sizeof(char );
 
 
 int main() {
+    //unitTests();
 
     firstPass(); //Read asm.txt and create symbol table
     secondPass(); //Evaulate all lines in asm.txt and append translations to bin.txt
@@ -309,6 +310,53 @@ void secondPass(){
         //Clear binLine
         binLine[0]='\0';
     }
+}
+
+
+void unitTests(){
+    //Initialize test output string
+    char binaryOutput[20]= {0};
+
+    //Test af hexToInt
+    char T1Input[] = "BEEF";
+    printf("%s%s\n","Test af hexToInt() med input:",T1Input);
+    int T1 = hexToInt(T1Input);
+    printf("Resultat = %d\n",T1);
+    printf("%s\n\n","Forventet resultat =48879");
+
+    //Test af hexToInt
+    char T2Input[] = "-BEEF";
+    printf("%s%s\n","Test af hexToInt() med input:",T2Input);
+    int T2 = hexToInt(T2Input);
+    printf("Resultat = %d\n",T2);
+    printf("%s\n\n","Forventet resultat =-48879");
+
+    //Test af hexToBin
+    char T3Input[] = "BEEF";
+    printf("%s%s\n","Test af hexToBin() til 17 bits med input:",T3Input);
+    char T3[20]={0};
+    hexToBin(T3Input,17,T3);
+    printf("Resultat = %s\n",T3);
+    printf("%s\n\n","Forventet resultat =0 1011 1110 1110 1111");
+
+    //Test af hexToBin
+    char T4Input[] = "-BEEF";
+    printf("%s%s\n","Test af hexToBin() til 17 bits med input:",T4Input);
+    char T4[20]={0};
+    hexToBin(T4Input,17,T4);
+    printf("Resultat = %s\n",T4);
+    printf("%s\n\n","Forventet resultat =1 0100 0001 0001 0001");
+
+    //Test af signExtendBinary
+    char T5Input[] = "1000";
+    printf("%s%s\n","Test af signExtendBinary() til 10 bits  med input:",T5Input);
+    char T5[20]={0};
+    signExtendBinary(T5Input,10,T5);
+    printf("Resultat = %s\n",T5);
+    printf("%s\n","Forventet resultat =111111 1000");
+
+
+
 }
 
 
