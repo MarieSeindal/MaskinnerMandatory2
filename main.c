@@ -193,7 +193,7 @@ void firstPass(){
     char * currentStringPtr = currentString; //Pointer to first non-whitespace character of currentString
     char currentStringCopy[maxInputLength];
     int opcode;
-    char label[maxLabelSize] = {0};
+    char label[maxInputLength] = {0};
     char * string;
 
     while (fgets(currentString, maxInputLength, inStream)){ //While not End Of File
